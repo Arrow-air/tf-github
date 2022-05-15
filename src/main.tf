@@ -11,7 +11,7 @@ locals {
       owner_team  = "devops"  # Will need to change this to a proper group
     }
     "tf-onboarding" = {
-      description = "Terraform code to create github users and groups"
+      description = "Terraform code to create users and groups for resources manageable by Terraform"
       visibility  = "private"
       owner_team  = "devops"
     }
