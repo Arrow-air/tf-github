@@ -104,7 +104,7 @@ resource "github_branch_protection" "protection" {
     dismiss_stale_reviews           = true
     restrict_dismissals             = true
     require_code_owner_reviews      = true
-    required_approving_review_count = 1
+    required_approving_review_count = var.required_approving_review_count
     dismissal_restrictions          = []
     pull_request_bypassers          = []
   }

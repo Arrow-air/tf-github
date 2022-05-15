@@ -32,7 +32,7 @@ variable "collaborators" {
 variable "default_branch" {
   description = "Repository default branch"
   type        = string
-  default     = "staging"
+  default     = "main"
 }
 
 variable "other_branches" {
@@ -62,4 +62,9 @@ variable "enable_discord_events" {
   description = "When enabled, repository events will be announced to discord"
   type        = bool
   default     = false
+}
+
+variable "required_approving_review_count" {
+  type    = number
+  default = 1
 }
