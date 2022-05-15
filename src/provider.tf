@@ -1,3 +1,12 @@
+terraform {
+  cloud {
+    organization = "Arrow-air"
+    workspaces {
+      tags = ["github"]
+    }
+  }
+}
+
 provider "github" {
   owner = "Arrow-air"
 
