@@ -10,6 +10,11 @@ resource "github_repository" "svc_template_rust" {
   vulnerability_alerts = true
   is_template          = true
 }
+resource "github_team_repository" "svc_template_rust_maintainer" {
+  repository = github_repository.svc_template_rust.name
+  team_id    = "services"
+  permission = "maintain"
+}
 
 ########################################################
 #
