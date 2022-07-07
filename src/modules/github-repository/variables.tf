@@ -14,6 +14,12 @@ variable "visibility" {
   default     = "public"
 }
 
+variable "template" {
+  description = "Optional template to use for provisioning of the repository"
+  type        = string
+  default     = null
+}
+
 variable "owner_team" {
   description = "The GitHub team to be used. Will be added to admins for private repositories and added in the CODEOWNERS file for public repositories."
   type        = string
@@ -32,7 +38,7 @@ variable "collaborators" {
 variable "default_branch" {
   description = "Repository default branch"
   type        = string
-  default     = "staging"
+  default     = "main"
 }
 
 variable "other_branches" {
@@ -48,18 +54,23 @@ variable "environments" {
       object({
         team = list(string)
       })
-    ))
+    ), {})
     deployment_branch_policy = optional(object({
-      protected_branches     = optional(bool)
-      custom_branch_policies = optional(bool)
+      protected_branches     = optional(bool, true)
+      custom_branch_policies = optional(bool, true)
     }))
   }))
 
-  default = null
+  default = {}
 }
 
 variable "enable_discord_events" {
   description = "When enabled, repository events will be announced to discord"
   type        = bool
   default     = false
+}
+
+variable "required_approving_review_count" {
+  type    = number
+  default = 1
 }
