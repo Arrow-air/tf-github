@@ -14,6 +14,12 @@ variable "visibility" {
   default     = "public"
 }
 
+variable "template" {
+  description = "Optional template to use for provisioning of the repository"
+  type        = string
+  default     = null
+}
+
 variable "owner_team" {
   description = "The GitHub team to be used. Will be added to admins for private repositories and added in the CODEOWNERS file for public repositories."
   type        = string
@@ -48,14 +54,14 @@ variable "environments" {
       object({
         team = list(string)
       })
-    ))
+    ), {})
     deployment_branch_policy = optional(object({
-      protected_branches     = optional(bool)
-      custom_branch_policies = optional(bool)
+      protected_branches     = optional(bool, true)
+      custom_branch_policies = optional(bool, true)
     }))
   }))
 
-  default = null
+  default = {}
 }
 
 variable "enable_discord_events" {

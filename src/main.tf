@@ -18,16 +18,33 @@ locals {
     }
     "cla-bot" = {
       description = "Arrow CLA bot API code and deployment files"
-      visibility  = "private"
+      visibility  = "public"
       owner_team  = "devops"
     }
     "clabot-config" = {
       description                     = "Arrow CLA bot global configuration"
-      visibility                      = "public"
+      visibility                      = "private"
       owner_team                      = "devops"
       required_approving_review_count = 2
     }
+    "tools" = {
+      description                     = "Software used for Arrow engineering"
+      visibility                      = "public"
+      owner_team                      = "drone-engineering"
+      required_approving_review_count = 1
+    }
+    "svc-storage" = {
+      description                     = "Arrow Services Storage module"
+      visibility                      = "public"
+      owner_team                      = "services"
+      required_approving_review_count = 1
+      template                        = github_repository.svc_template_rust.name
+    }
   }
+}
+
+output "branches" {
+  value = module.repository
 }
 
 module "repository" {
@@ -37,9 +54,9 @@ module "repository" {
   name           = each.key
   description    = each.value.description
   visibility     = each.value.visibility
-  default_branch = each.value.default_branch
+  default_branch = try(each.value.default_branch, null)
 
-  required_approving_review_count = each.value.required_approving_review_count
+  required_approving_review_count = try(each.value.required_approving_review_count, 1)
 
   owner_team = each.value.owner_team
 }

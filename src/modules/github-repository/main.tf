@@ -6,16 +6,9 @@ locals {
     pullers     = []
   })
 
-  environments = defaults(var.environments, {
-    reviewers = {}
-    deployment_branch_policy = {
-      protected_branches     = true
-      custom_branch_policies = true
-    }
-  })
+  default_branch = var.default_branch == null ? "main" : var.default_branch
 
-
-  branches = toset(concat([var.default_branch], var.other_branches))
+  branches = distinct(concat([local.default_branch], var.other_branches))
 }
 
 data "github_team" "owner" {
@@ -32,6 +25,15 @@ resource "github_repository" "repository" {
   has_projects         = true
   has_wiki             = true
   vulnerability_alerts = true
+
+  dynamic "template" {
+    for_each = var.template == null ? {} : { owner = "Arrow-air", repository = var.template }
+
+    content {
+      owner      = template.value.owner
+      repository = template.value.repository
+    }
+  }
 }
 
 ########################################################
@@ -85,13 +87,13 @@ resource "github_branch" "branch" {
 
 resource "github_branch_default" "default" {
   repository = github_repository.repository.name
-  branch     = var.default_branch
+  branch     = local.default_branch
 
   depends_on = [github_branch.branch]
 }
 
 resource "github_branch_protection" "protection" {
-  for_each = var.visibility == "public" ? local.branches : toset([])
+  for_each = toset(var.visibility == "public" ? local.branches : [])
 
   repository_id                   = github_repository.repository.name
   pattern                         = each.key
@@ -109,7 +111,7 @@ resource "github_branch_protection" "protection" {
     pull_request_bypassers          = []
   }
 
-  depends_on = [github_repository_environment.env]
+  depends_on = [github_repository_environment.env, github_repository_file.CODEOWNERS]
 }
 
 ########################################################
@@ -118,7 +120,7 @@ resource "github_branch_protection" "protection" {
 #
 ########################################################
 resource "github_repository_environment" "env" {
-  for_each = local.environments
+  for_each = var.environments
 
   environment = each.key
   repository  = github_repository.repository.name
@@ -149,6 +151,7 @@ resource "github_repository_file" "CODEOWNERS" {
   content             = format("* @Arrow-air/%s\n", data.github_team.owner.name)
   commit_message      = "Provisioned by Terraform"
   commit_email        = "automation@arrowair.com"
+  commit_author       = "Arrow automation"
   overwrite_on_create = false
   depends_on          = [github_repository_environment.env]
 }
