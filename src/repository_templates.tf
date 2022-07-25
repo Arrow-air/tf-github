@@ -1,5 +1,40 @@
 ########################################################
 #
+# TypeScript template repository
+#
+########################################################
+resource "github_repository" "svc_template_typescript" {
+  name        = "svc-template-typescript"
+  description = "Arrow Service repository template for TypeScript services"
+  visibility  = "public"
+
+  auto_init            = true
+  has_issues           = true
+  has_projects         = true
+  has_wiki             = true
+  vulnerability_alerts = true
+  is_template          = true
+}
+resource "github_team_repository" "svc_template_typescript_maintainer" {
+  repository = github_repository.svc_template_typescript.name
+  team_id    = "services"
+  permission = "maintain"
+}
+
+# Provision sdd file
+resource "github_repository_file" "svc_template_typescript_sdd" {
+  repository          = github_repository.svc_template_typescript.name
+  branch              = "main"
+  file                = "docs/sdd.md"
+  content             = file("templates/svc/docs/sdd.md")
+  commit_message      = "Provisioned by Terraform"
+  commit_email        = "automation@arrowair.com"
+  commit_author       = "Arrow automation"
+  overwrite_on_create = false
+}
+
+########################################################
+#
 # Rust template repository
 #
 ########################################################
