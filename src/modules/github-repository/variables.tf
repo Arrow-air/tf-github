@@ -14,8 +14,20 @@ variable "visibility" {
   default     = "public"
 }
 
+variable "is_template" {
+  description = "Set to true to tell GitHub that this is a template repository."
+  type        = bool
+  default     = false
+}
+
+variable "delete_branch_on_merge" {
+  description = "Automatically delete head branch after a pull request is merged."
+  type        = bool
+  default     = true
+}
+
 variable "template" {
-  description = "Optional template to use for provisioning of the repository"
+  description = "Optional template to use for provisioning of the repository."
   type        = string
   default     = null
 }
@@ -28,11 +40,13 @@ variable "owner_team" {
 variable "collaborators" {
   description = "Repository collaborators and permissions."
   type = object({
-    admins      = optional(list(string))
-    maintainers = optional(list(string))
+    admins      = optional(set(string), [])
+    maintainers = optional(set(string), [])
+    pushers     = optional(set(string), [])
+    pullers     = optional(set(string), [])
   })
 
-  default = null
+  default = {}
 }
 
 variable "default_branch" {
@@ -41,10 +55,48 @@ variable "default_branch" {
   default     = "main"
 }
 
-variable "other_branches" {
-  description = "Repository additional long lived branches"
-  type        = list(string)
-  default     = ["main"]
+variable "protected_branches" {
+  description = "Long lived (protected) branches to be created"
+
+  type = map(object({
+    pattern                         = optional(string)
+    enforce_admins                  = optional(bool, true)
+    allows_deletions                = optional(bool, false)
+    require_conversation_resolution = optional(bool, true)
+    require_signed_commits          = optional(bool, true)
+
+    push_restrictions = optional(list(string), [])
+
+    required_status_checks = optional(
+      object({
+        strict = optional(bool, true)
+      }),
+      { strict = true }
+    )
+
+    required_pull_request_reviews = optional(
+      object({
+        dismiss_stale_reviews           = optional(bool, true)
+        restrict_dismissals             = optional(bool, true)
+        require_code_owner_reviews      = optional(bool, true)
+        required_approving_review_count = optional(number, 1)
+        dismissal_restrictions          = optional(list(string), [])
+        pull_request_bypassers          = optional(list(string), [])
+      }),
+      {
+        dismiss_stale_reviews           = true
+        restrict_dismissals             = true
+        require_code_owner_reviews      = true
+        required_approving_review_count = 1
+        dismissal_restrictions          = []
+        pull_request_bypassers          = []
+      }
+    )
+  }))
+
+  default = {
+    "main" = {}
+  }
 }
 
 variable "environments" {
@@ -64,13 +116,64 @@ variable "environments" {
   default = {}
 }
 
+variable "default_branch_protection_settings" {
+  description = "Settings to use for protected branches created"
+
+  type = object({
+    enforce_admins                  = optional(bool, true)
+    allows_deletions                = optional(bool, false)
+    require_conversation_resolution = optional(bool, true)
+    require_signed_commits          = optional(bool, true)
+    push_restrictions               = optional(list(string), [])
+
+    required_status_checks = optional(
+      object({
+        strict = optional(bool, true)
+      }),
+      { strict = true }
+    )
+
+    required_pull_request_reviews = optional(
+      object({
+        dismiss_stale_reviews           = optional(bool, true)
+        restrict_dismissals             = optional(bool, true)
+        require_code_owner_reviews      = optional(bool, true)
+        required_approving_review_count = optional(number, 1)
+        dismissal_restrictions          = optional(list(string), [])
+        pull_request_bypassers          = optional(list(string), [])
+      }),
+      {
+        dismiss_stale_reviews           = true
+        restrict_dismissals             = true
+        require_code_owner_reviews      = true
+        required_approving_review_count = 1
+        dismissal_restrictions          = []
+        pull_request_bypassers          = []
+      }
+    )
+  })
+
+  default = {
+    enforce_admins                  = true
+    allows_deletions                = false
+    require_conversation_resolution = true
+    require_signed_commits          = true
+    push_restrictions               = []
+    required_status_checks          = { strict = true }
+
+    required_pull_request_reviews = {
+      dismiss_stale_reviews           = true
+      restrict_dismissals             = true
+      require_code_owner_reviews      = true
+      required_approving_review_count = 1
+      dismissal_restrictions          = []
+      pull_request_bypassers          = []
+    }
+  }
+}
+
 variable "enable_discord_events" {
   description = "When enabled, repository events will be announced to discord"
   type        = bool
   default     = false
-}
-
-variable "required_approving_review_count" {
-  type    = number
-  default = 1
 }

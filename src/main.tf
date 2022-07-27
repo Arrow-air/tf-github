@@ -6,45 +6,28 @@ locals {
       visibility     = "public"
       owner_team     = "webdevelopers"
     }
-    "tf-github" = {
-      description = "Terraform code to create github resources"
-      visibility  = "private" # Not sure if we want to make this one public
-      owner_team  = "devops"  # Will need to change this to a proper group
-    }
-    "tf-onboarding" = {
-      description = "Terraform code to create users and groups for resources manageable by Terraform"
-      visibility  = "private"
-      owner_team  = "devops"
-    }
     "cla-bot" = {
       description = "Arrow CLA bot API code and deployment files"
       visibility  = "public"
       owner_team  = "devops"
     }
     "clabot-config" = {
-      description                     = "Arrow CLA bot global configuration"
-      visibility                      = "private"
-      owner_team                      = "devops"
-      required_approving_review_count = 2
+      description = "Arrow CLA bot global configuration"
+      visibility  = "private"
+      owner_team  = "devops"
+      # override review_count for branch protection settings
+      default_branch_protection_settings = {
+        required_pull_request_reviews = {
+          required_approving_review_count = 2
+        }
+      }
     }
     "tools" = {
-      description                     = "Software used for Arrow engineering"
-      visibility                      = "public"
-      owner_team                      = "drone-engineering"
-      required_approving_review_count = 1
-    }
-    "svc-storage" = {
-      description                     = "Arrow Services Storage module"
-      visibility                      = "public"
-      owner_team                      = "services"
-      required_approving_review_count = 1
-      template                        = github_repository.svc_template_rust.name
+      description = "Software used for Arrow engineering"
+      visibility  = "public"
+      owner_team  = "drone-engineering"
     }
   }
-}
-
-output "branches" {
-  value = module.repository
 }
 
 module "repository" {
@@ -54,9 +37,10 @@ module "repository" {
   name           = each.key
   description    = each.value.description
   visibility     = each.value.visibility
-  default_branch = try(each.value.default_branch, null)
+  default_branch = try(each.value.default_branch, "main")
 
-  required_approving_review_count = try(each.value.required_approving_review_count, 1)
+  default_branch_protection_settings = try(each.value.default_branch_protection_settings, {})
 
   owner_team = each.value.owner_team
+  template   = try(each.value.template, null)
 }
