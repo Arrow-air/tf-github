@@ -37,7 +37,16 @@ locals {
       description                     = "Arrow Services Storage module"
       visibility                      = "public"
       owner_team                      = "services"
+      default_branch                  = "develop"
       required_approving_review_count = 1
+      template                        = github_repository.svc_template_rust.name
+    }
+    "svc-scheduler" = {
+      description                     = "Arrow Services Scheduler module"
+      visibility                      = "public"
+      owner_team                      = "services"
+      required_approving_review_count = 2
+      default_branch                  = "develop"
       template                        = github_repository.svc_template_rust.name
     }
   }
