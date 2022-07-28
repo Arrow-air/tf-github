@@ -66,6 +66,6 @@ module "repository" {
   default_branch = try(each.value.default_branch, null)
 
   required_approving_review_count = try(each.value.required_approving_review_count, 1)
-
-  owner_team = each.value.owner_team
+  template                        = try(each.value.template, null)
+  owner_team                      = each.value.owner_team
 }
