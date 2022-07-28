@@ -107,13 +107,17 @@ resource "github_branch_protection" "protection" {
     strict = each.value.required_status_checks.strict
   }
 
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = each.value.required_pull_request_reviews.dismiss_stale_reviews
-    restrict_dismissals             = each.value.required_pull_request_reviews.restrict_dismissals
-    require_code_owner_reviews      = var.visibility == "public" ? each.value.required_pull_request_reviews.require_code_owner_reviews : null
-    required_approving_review_count = each.value.required_pull_request_reviews.required_approving_review_count
-    dismissal_restrictions          = each.value.required_pull_request_reviews.dismissal_restrictions
-    pull_request_bypassers          = each.value.required_pull_request_reviews.pull_request_bypassers
+  dynamic "required_pull_request_reviews" {
+    for_each = toset(var.visibility == "public" ? ["rules"] : [])
+
+    content {
+      dismiss_stale_reviews           = each.value.required_pull_request_reviews.dismiss_stale_reviews
+      restrict_dismissals             = each.value.required_pull_request_reviews.restrict_dismissals
+      require_code_owner_reviews      = each.value.required_pull_request_reviews.require_code_owner_reviews
+      required_approving_review_count = each.value.required_pull_request_reviews.required_approving_review_count
+      dismissal_restrictions          = each.value.required_pull_request_reviews.dismissal_restrictions
+      pull_request_bypassers          = each.value.required_pull_request_reviews.pull_request_bypassers
+    }
   }
 
   depends_on = [
@@ -161,6 +165,6 @@ resource "github_repository_file" "CODEOWNERS" {
   commit_message      = "Provisioned by Terraform"
   commit_email        = "automation@arrowair.com"
   commit_author       = "Arrow automation"
-  overwrite_on_create = false
+  overwrite_on_create = true
   depends_on          = [github_repository_environment.env]
 }
