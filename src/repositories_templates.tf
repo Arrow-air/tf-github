@@ -42,6 +42,19 @@ resource "github_repository" "svc_template_rust" {
   name        = "svc-template-rust"
   description = "Arrow Service repository template for Rust services"
   visibility  = "public"
+  default_branch_protection = {
+    required_status_checks = {
+      strict = true
+    },
+    required_pull_request_reviews = {
+      dismiss_stale_reviews           = true
+      restrict_dismissals             = true
+      require_code_owner_reviews      = true
+      required_approving_review_count = 2
+      dismissal_restrictions          = []
+      pull_request_bypassers          = []
+    }
+  }
 
   auto_init            = true
   has_issues           = true
@@ -77,6 +90,19 @@ resource "github_repository" "lib_template_rust" {
   name        = "template-rust-lib"
   description = "Arrow (Rust) Library Repository"
   visibility  = "public"
+  default_branch_protection = {
+    required_status_checks = {
+      strict = true
+    },
+    required_pull_request_reviews = {
+      dismiss_stale_reviews           = true
+      restrict_dismissals             = true
+      require_code_owner_reviews      = true
+      required_approving_review_count = 2
+      dismissal_restrictions          = []
+      pull_request_bypassers          = []
+    }
+  }
 
   auto_init            = true
   has_issues           = true
