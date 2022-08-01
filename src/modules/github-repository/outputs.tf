@@ -1,3 +1,3 @@
-output "branches" {
-  value = local.branches
+output "protected_branches" {
+  value = local.protected_branches
 }
