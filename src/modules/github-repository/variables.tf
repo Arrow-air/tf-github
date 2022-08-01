@@ -1,3 +1,9 @@
+variable "terraform_app_node_id" {
+  description = "Node ID of terraform app, This node ID is found by querying the GitHub API `gh api -H \"Accept: application/vnd.github+json\" /apps/arrow-tf-github-repositories`"
+  type        = string
+  default     = "A_kwHOBayTi84AAq0w"
+}
+
 variable "name" {
   description = "The repository name"
   type        = string
@@ -62,6 +68,7 @@ variable "protected_branches" {
     pattern                         = optional(string)
     enforce_admins                  = optional(bool, true)
     allows_deletions                = optional(bool, false)
+    allows_force_pushes             = optional(bool, false)
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, true)
 
@@ -122,6 +129,7 @@ variable "default_branch_protection_settings" {
   type = object({
     enforce_admins                  = optional(bool, true)
     allows_deletions                = optional(bool, false)
+    allows_force_pushes             = optional(bool, false)
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, true)
     push_restrictions               = optional(list(string), [])
@@ -156,6 +164,7 @@ variable "default_branch_protection_settings" {
   default = {
     enforce_admins                  = true
     allows_deletions                = false
+    allows_force_pushes             = false
     require_conversation_resolution = true
     require_signed_commits          = true
     push_restrictions               = []
