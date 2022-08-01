@@ -1,10 +1,10 @@
 locals {
   # Make sure we add our default branch to the list of protected branches
   protected_branches = merge(
+    var.protected_branches,
     {
       (var.default_branch) = var.default_branch_protection_settings
-    },
-    var.protected_branches
+    }
   )
 }
 
@@ -87,17 +87,16 @@ resource "github_branch" "branch" {
 resource "github_branch_default" "default" {
   repository = github_repository.repository.name
   branch     = var.default_branch
-
-  depends_on = [github_branch.branch]
 }
 
 resource "github_branch_protection" "protection" {
-  for_each = { for key, value in local.protected_branches : key => merge(var.default_branch_protection_settings, value) }
+  for_each = { for key, value in local.protected_branches : key => merge(var.default_branch_protection_settings, value) if var.visibility == "public" }
 
   repository_id                   = github_repository.repository.name
   pattern                         = try(each.value.pattern, null) == null ? each.key : each.value.pattern
   enforce_admins                  = each.value.enforce_admins
   allows_deletions                = each.value.allows_deletions
+  allows_force_pushes             = each.value.allows_force_pushes
   require_conversation_resolution = each.value.require_conversation_resolution
   require_signed_commits          = each.value.require_signed_commits
 
@@ -107,18 +106,30 @@ resource "github_branch_protection" "protection" {
     strict = each.value.required_status_checks.strict
   }
 
-  dynamic "required_pull_request_reviews" {
-    for_each = toset(var.visibility == "public" ? ["rules"] : [])
-
-    content {
-      dismiss_stale_reviews           = each.value.required_pull_request_reviews.dismiss_stale_reviews
-      restrict_dismissals             = each.value.required_pull_request_reviews.restrict_dismissals
-      require_code_owner_reviews      = each.value.required_pull_request_reviews.require_code_owner_reviews
-      required_approving_review_count = each.value.required_pull_request_reviews.required_approving_review_count
-      dismissal_restrictions          = each.value.required_pull_request_reviews.dismissal_restrictions
-      pull_request_bypassers          = each.value.required_pull_request_reviews.pull_request_bypassers
-    }
+  required_pull_request_reviews {
+    dismiss_stale_reviews           = each.value.required_pull_request_reviews.dismiss_stale_reviews
+    dismissal_restrictions          = each.value.required_pull_request_reviews.dismissal_restrictions
+    restrict_dismissals             = each.value.required_pull_request_reviews.restrict_dismissals
+    require_code_owner_reviews      = each.value.required_pull_request_reviews.require_code_owner_reviews
+    required_approving_review_count = each.value.required_pull_request_reviews.required_approving_review_count
+    pull_request_bypassers          = distinct(concat([var.terraform_app_node_id], each.value.required_pull_request_reviews.pull_request_bypassers))
   }
+
+  depends_on = [
+    github_branch.branch,
+    github_repository_environment.env,
+    github_repository_file.CODEOWNERS
+  ]
+}
+
+resource "github_branch_protection" "all" {
+  for_each               = var.visibility == "public" ? { (github_repository.repository.name) = "*" } : {}
+  repository_id          = each.key
+  pattern                = each.value
+  enforce_admins         = true
+  allows_deletions       = true
+  require_signed_commits = true
+  allows_force_pushes    = true
 
   depends_on = [
     github_branch.branch,
@@ -166,5 +177,4 @@ resource "github_repository_file" "CODEOWNERS" {
   commit_email        = "automation@arrowair.com"
   commit_author       = "Arrow automation"
   overwrite_on_create = true
-  depends_on          = [github_repository_environment.env]
 }
