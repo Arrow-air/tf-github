@@ -40,6 +40,7 @@ module "tf_repository" {
   owner_team     = try(each.value.owner_team, "services")
   visibility     = try(each.value.visibility, "public")
   default_branch = try(each.value.default_branch, "main")
+  webhooks       = local.svc.webhooks
 
   collaborators = {
     maintainers = ["devops"]

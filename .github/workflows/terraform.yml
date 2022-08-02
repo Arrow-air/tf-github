@@ -17,7 +17,8 @@ jobs:
       issues: write
       pull-requests: write
       contents: read
-
+    env:
+      TF_VAR_discord_services_integration_url: ${{ secrets.TF_VAR_DISCORD_SERVICES_INTEGRATION_URL }}
     defaults:
       run:
         working-directory: src

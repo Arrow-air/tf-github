@@ -178,3 +178,22 @@ resource "github_repository_file" "CODEOWNERS" {
   commit_author       = "Arrow automation"
   overwrite_on_create = true
 }
+
+########################################################
+#
+# Create webhooks
+#
+########################################################
+resource "github_repository_webhook" "map" {
+  for_each = var.webhooks
+
+  repository = github_repository.repository.name
+  active     = each.value.active
+  events     = each.value.events
+
+  configuration {
+    url          = each.value.configuration.url
+    content_type = each.value.configuration.content_type
+    insecure_ssl = false
+  }
+}

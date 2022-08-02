@@ -1,4 +1,7 @@
 locals {
+  # Secret provided by Terraform Cloud configuration on the workspace
+  discord_services_integration_url = sensitive(var.discord_services_integration_url)
+
   repos = {
     "website" = {
       default_branch = "staging"
