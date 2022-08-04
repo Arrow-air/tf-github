@@ -179,6 +179,21 @@ resource "github_repository_file" "CODEOWNERS" {
   overwrite_on_create = true
 }
 
+resource "github_repository_file" "files" {
+  for_each = var.repository_files
+
+  repository = github_repository.repository.name
+  branch     = github_branch_default.default.branch
+
+  file                = each.key
+  content             = each.value.content
+  overwrite_on_create = each.value.overwrite_on_create
+
+  commit_message = "Provisioned by Terraform"
+  commit_email   = "automation@arrowair.com"
+  commit_author  = "Arrow automation"
+}
+
 ########################################################
 #
 # Create webhooks

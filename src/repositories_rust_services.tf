@@ -23,6 +23,36 @@ locals {
       }
     }
 
+    svc_files = {
+      ".gitignore" = {
+        content = file("templates/rust-svc/.gitignore")
+      },
+      ".editorconfig" = {
+        content = file("templates/rust-all/.editorconfig")
+      },
+      ".cargo/config.toml" = {
+        content = file("templates/rust-all/.cargo/config.toml")
+      },
+      ".cargo-husky/hooks/pre-commit" = {
+        content = file("templates/rust-all/.cargo-husky/hooks/pre-commit")
+      },
+      ".cargo-husky/hooks/pre-push" = {
+        content = file("templates/rust-all/.cargo-husky/hooks/pre-push")
+      },
+      ".cargo-husky/hooks/README.md" = {
+        content = file("templates/rust-all/.cargo-husky/hooks/README.md")
+      },
+      ".github/workflows/rust_ci.yml" = {
+        content = file("templates/rust-all/.github/workflows/rust_ci.yml")
+      },
+      ".github/workflows/python_ci.yml" = {
+        content = file("templates/rust-all/.github/workflows/python_ci.yml")
+      },
+      ".github/workflows/editorconfig_check.yml" = {
+        content = file("templates/rust-all/.github/workflows/editorconfig_check.yml")
+      }
+    }
+
     # List of service repositories to be created
     # Default settings without override
     # {
@@ -57,11 +87,12 @@ module "svc_repository" {
   description = format("%s - %s", local.svc.description_prefix, each.value.description)
 
   # Settings with defaults
-  owner_team     = try(each.value.owner_team, "services")
-  visibility     = try(each.value.visibility, "public")
-  default_branch = try(each.value.default_branch, "develop")
-  template       = github_repository.svc_template_rust.name
-  webhooks       = local.svc.webhooks
+  owner_team       = try(each.value.owner_team, "services")
+  visibility       = try(each.value.visibility, "public")
+  default_branch   = try(each.value.default_branch, "develop")
+  template         = github_repository.svc_template_rust.name
+  webhooks         = local.svc.webhooks
+  repository_files = local.svc.svc_files
 
   default_branch_protection_settings = try(each.value.default_branch_protection_settings, {})
 }
