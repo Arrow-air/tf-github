@@ -201,3 +201,12 @@ variable "webhooks" {
   }))
   default = {}
 }
+
+variable "repository_files" {
+  description = "List of files that should be provisioned in the repository through Terraform"
+  type = map(object({
+    content             = string
+    overwrite_on_create = optional(bool, true)
+  }))
+  default = {}
+}
