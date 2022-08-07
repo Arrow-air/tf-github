@@ -80,9 +80,9 @@ locals {
     #   default_branch_protection_settings = {} # Using module defaults
     # }
     repos = {
-      #   "router" = {
-      #     description = "Fleet Routing Algorithm Library"
-      #   }
+      "router" = {
+        description = "Fleet Routing Algorithm Library"
+      }
       #   "analytics" = {
       #     description = "Fleet Routing Analysis from Real or Simulated Artifacts"
       #   }
@@ -121,6 +121,9 @@ locals {
     repos = {
       "storage" = {
         description = "Storage module"
+      },
+      "scheduler" = {
+        description = "Fleet Routing and Flight Planner"
       }
     }
   }
