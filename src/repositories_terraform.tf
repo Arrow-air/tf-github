@@ -1,55 +1,57 @@
 #####################################################################
 #
-# Repository settings for Terraform repositories
+# Repository settings for Arrow Terraform
 #
 #####################################################################
 locals {
-  # List of service repositories to created
-  # Default settings (can be overwritten here)
-  # {
-  #   owner_team = "services"
-  #   visibility = "public"
-  #   default_branch = "main"
-  #   default_branch_protection_settings = {
-  #     required_pull_request_reviews = { 
-  #       required_approving_review_count = 2
-  #     }
-  #   }
-  # }
-  tf_repos = {
-    "onboarding" = {
-      description = "users and groups for resources manageable by Terraform"
-      visibility  = "private"
-      owner_team  = "devops"
+  tf = {
+    repos = {
+      "onboarding" = {
+        description = "users and groups for resources manageable by Terraform"
+        visibility  = "private"
+        owner_team  = "devops"
+      }
+      "github" = {
+        description = "github resources"
+      }
     }
-    "github" = {
-      description = "github resources"
+  }
+
+  terraform_default = {
+    settings = {
+      owner_team     = "devops"
+      visibility     = "public"
+      default_branch = "main"
+      webhooks       = try(local.webhooks["services"], {})
+      # override review_count for branch protection settings
+      default_branch_protection_settings = {
+        required_pull_request_reviews = {
+          required_approving_review_count = 2
+        }
+      }
     }
   }
 }
 
-
-module "tf_repository" {
+########################################################
+# Terraform repositories
+########################################################
+module "repository_tf" {
   source   = "./modules/github-repository/"
-  for_each = local.tf_repos
+  for_each = { for key, settings in local.tf.repos : key => merge(local.terraform_default.settings, settings) }
 
   name        = format("tf-%s", each.key)
-  description = format("Terraform - %s", each.value.description)
+  description = format("Arrow Terraform - %s", each.value.description)
 
   # Settings with defaults
-  owner_team     = try(each.value.owner_team, "services")
-  visibility     = try(each.value.visibility, "public")
-  default_branch = try(each.value.default_branch, "main")
-  webhooks       = local.svc.webhooks
+  owner_team     = each.value.owner_team
+  visibility     = each.value.visibility
+  default_branch = each.value.default_branch
+  webhooks       = each.value.webhooks
 
   collaborators = {
-    maintainers = ["devops"]
+    maintainers = ["services"]
   }
 
-  # override review_count for branch protection settings
-  default_branch_protection_settings = {
-    required_pull_request_reviews = {
-      required_approving_review_count = 2
-    }
-  }
+  default_branch_protection_settings = each.value.default_branch_protection_settings
 }
