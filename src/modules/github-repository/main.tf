@@ -87,6 +87,8 @@ resource "github_branch" "branch" {
 resource "github_branch_default" "default" {
   repository = github_repository.repository.name
   branch     = var.default_branch
+
+  depends_on = [github_branch.branch]
 }
 
 resource "github_branch_protection" "protection" {

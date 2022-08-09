@@ -2,6 +2,23 @@ locals {
   # Secret provided by Terraform Cloud configuration on the workspace
   discord_services_integration_url = sensitive(var.discord_services_integration_url)
 
+  # List of webhooks to apply for repositories owned by team
+  webhooks = {
+    services = {
+      "discord" = {
+        events = [
+          "pull_request",
+          "pull_request_review",
+          "pull_request_review_comment",
+          "pull_request_review_thread"
+        ]
+        configuration = {
+          url = local.discord_services_integration_url
+        }
+      }
+    }
+  }
+
   repos = {
     "website" = {
       default_branch = "staging"

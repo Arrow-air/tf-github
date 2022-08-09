@@ -1,91 +1,79 @@
-########################################################
+#####################################################################
 #
-# TypeScript template repository
+# Repository settings for Arrow Templates
 #
-########################################################
-resource "github_repository" "svc_template_typescript" {
-  name        = "svc-template-typescript"
-  description = "Arrow Service repository template for TypeScript services"
-  visibility  = "public"
+#####################################################################
 
-  auto_init            = true
-  has_issues           = true
-  has_projects         = true
-  has_wiki             = true
-  vulnerability_alerts = true
-  is_template          = true
-}
-resource "github_team_repository" "svc_template_typescript_maintainer" {
-  repository = github_repository.svc_template_typescript.name
-  team_id    = "services"
-  permission = "maintain"
-}
+locals {
+  lib_template = {
+    repos = {
+      "rust" = {
+        description = "Rust libraries"
+      }
+    }
+  }
 
-########################################################
-#
-# Rust Service template repository
-#
-########################################################
-resource "github_repository" "svc_template_rust" {
-  name        = "svc-template-rust"
-  description = "Arrow Service repository template for Rust services"
-  visibility  = "public"
+  svc_template = {
+    repos = {
+      "typescript" = {
+        description = "TypeScript services"
+      }
+      "rust" = {
+        description = "Rust services"
+      }
+      "python" = {
+        description = "Python services"
+      }
+    }
+  }
 
-  auto_init            = true
-  has_issues           = true
-  has_projects         = true
-  has_wiki             = true
-  vulnerability_alerts = true
-  is_template          = true
-}
-resource "github_team_repository" "svc_template_rust_maintainer" {
-  repository = github_repository.svc_template_rust.name
-  team_id    = "services"
-  permission = "maintain"
+  template_default = {
+    settings = {
+      owner_team                         = "services"
+      visibility                         = "public"
+      default_branch                     = "develop"
+      webhooks                           = try(local.webhooks["services"], {})
+      default_branch_protection_settings = {} # Using module defaults
+    }
+  }
 }
 
 ########################################################
-#
-# Rust Library template repository
-#
+# Library repositories
 ########################################################
-resource "github_repository" "lib_template_rust" {
-  name        = "template-rust-lib"
-  description = "Arrow (Rust) Library Repository"
-  visibility  = "public"
+module "repository_lib_template" {
+  source   = "./modules/github-repository/"
+  for_each = { for key, settings in local.lib_template.repos : key => merge(local.template_default.settings, settings) }
 
-  auto_init            = true
-  has_issues           = true
-  has_projects         = true
-  has_wiki             = true
-  vulnerability_alerts = true
-  is_template          = true
-}
-resource "github_team_repository" "lib_template_rust_maintainer" {
-  repository = github_repository.lib_template_rust.name
-  team_id    = "services"
-  permission = "maintain"
+  name        = format("lib-template-%s", each.key)
+  description = format("Arrow Library Template - %s", each.value.description)
+  is_template = true
+
+  # Settings with defaults
+  owner_team     = each.value.owner_team
+  visibility     = each.value.visibility
+  default_branch = each.value.default_branch
+  webhooks       = each.value.webhooks
+
+  default_branch_protection_settings = each.value.default_branch_protection_settings
 }
 
 ########################################################
-#
-# Python template repository
-#
+# Services repositories
 ########################################################
-resource "github_repository" "svc_template_python" {
-  name        = "svc-template-python"
-  description = "Arrow Service repository template for Python services"
-  visibility  = "public"
+module "repository_svc_template" {
+  source   = "./modules/github-repository/"
+  for_each = { for key, settings in local.svc_template.repos : key => merge(local.template_default.settings, settings) }
 
-  auto_init            = true
-  has_issues           = true
-  has_projects         = true
-  has_wiki             = true
-  vulnerability_alerts = true
-  is_template          = true
-}
-resource "github_team_repository" "svc_template_python_maintainer" {
-  repository = github_repository.svc_template_python.name
-  team_id    = "services"
-  permission = "maintain"
+  name        = format("svc-template-%s", each.key)
+  description = format("Arrow Service Template - %s", each.value.description)
+  is_template = true
+
+  # Settings with defaults
+  owner_team     = each.value.owner_team
+  visibility     = each.value.visibility
+  default_branch = each.value.default_branch
+  webhooks       = each.value.webhooks
+
+  default_branch_protection_settings = each.value.default_branch_protection_settings
 }
