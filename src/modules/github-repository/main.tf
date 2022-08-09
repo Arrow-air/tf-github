@@ -30,7 +30,7 @@ resource "github_repository" "repository" {
 
     content {
       owner      = "Arrow-air"
-      repository = template.key
+      repository = template.value
     }
   }
 }
