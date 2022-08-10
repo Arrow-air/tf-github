@@ -30,6 +30,11 @@ locals {
       visibility  = "public"
       owner_team  = "drone-engineering"
     }
+    "benchmarks" = {
+      description = "In-house benchmarks for various frameworks."
+      visibility  = "public"
+      owner_team  = "services"
+    }
   }
 }
 
