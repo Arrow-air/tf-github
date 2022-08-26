@@ -52,6 +52,17 @@ locals {
       visibility  = "public"
       owner_team  = "services"
     }
+    "se-services" = {
+      default_branch = "develop"
+      description    = "Systems Engineering documentation for Aerial Mobility Services"
+      visibility     = "public"
+      owner_team     = "services"
+      default_branch_protection_settings = {
+        required_pull_request_reviews = {
+          required_approving_review_count = 2
+        }
+      }
+    }
   }
 }
 
