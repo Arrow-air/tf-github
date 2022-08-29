@@ -48,9 +48,10 @@ locals {
       owner_team  = "drone-engineering"
     }
     "benchmarks" = {
-      description = "In-house benchmarks for various frameworks."
-      visibility  = "public"
-      owner_team  = "services"
+      description      = "In-house benchmarks for various frameworks."
+      visibility       = "public"
+      owner_team       = "services"
+      repository_files = local.rust_default.files
     }
   }
 }
@@ -59,10 +60,11 @@ module "repository" {
   source   = "./modules/github-repository/"
   for_each = local.repos
 
-  name           = each.key
-  description    = each.value.description
-  visibility     = each.value.visibility
-  default_branch = try(each.value.default_branch, "main")
+  name             = each.key
+  description      = each.value.description
+  visibility       = each.value.visibility
+  default_branch   = try(each.value.default_branch, "main")
+  repository_files = try(each.value.repository_files, {})
 
   default_branch_protection_settings = try(each.value.default_branch_protection_settings, {})
 
