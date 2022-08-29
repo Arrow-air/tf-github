@@ -69,6 +69,9 @@ locals {
       },
       ".github/workflows/editorconfig_check.yml" = {
         content = file("templates/rust-all/.github/workflows/editorconfig_check.yml")
+      },
+      ".github/workflows/pr_rebase.yml" = {
+        content = file("templates/rust-all/.github/workflows/pr_rebase.yml")
       }
     }
 
