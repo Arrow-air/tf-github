@@ -53,6 +53,17 @@ locals {
       owner_team       = "services"
       repository_files = local.rust_default.files
     }
+    "se-services" = {
+      default_branch = "develop"
+      description    = "Systems Engineering documentation for Aerial Mobility Services"
+      visibility     = "public"
+      owner_team     = "services"
+      default_branch_protection_settings = {
+        required_pull_request_reviews = {
+          required_approving_review_count = 2
+        }
+      }
+    }
   }
 }
 
