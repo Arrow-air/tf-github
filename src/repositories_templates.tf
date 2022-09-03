@@ -55,6 +55,10 @@ module "repository_lib_template" {
   default_branch = each.value.default_branch
   webhooks       = each.value.webhooks
 
+  repository_files = { for file, path in local.template_files :
+    file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+  }
+
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
 
@@ -74,6 +78,10 @@ module "repository_svc_template" {
   visibility     = each.value.visibility
   default_branch = each.value.default_branch
   webhooks       = each.value.webhooks
+
+  repository_files = { for file, path in local.template_files :
+    file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+  }
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }

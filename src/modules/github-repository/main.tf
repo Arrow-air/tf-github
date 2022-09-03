@@ -120,7 +120,7 @@ resource "github_branch_protection" "protection" {
   depends_on = [
     github_branch.branch,
     github_repository_environment.env,
-    github_repository_file.CODEOWNERS
+    github_repository_file.files
   ]
 }
 
@@ -136,7 +136,7 @@ resource "github_branch_protection" "all" {
   depends_on = [
     github_branch.branch,
     github_repository_environment.env,
-    github_repository_file.CODEOWNERS
+    github_repository_file.files
   ]
 }
 
@@ -167,20 +167,9 @@ resource "github_repository_environment" "env" {
 
 ########################################################
 #
-# Provision CODEOWNERS file
+# Provision Terraform managed repository files
 #
 ########################################################
-resource "github_repository_file" "CODEOWNERS" {
-  repository          = github_repository.repository.name
-  branch              = github_branch_default.default.branch
-  file                = ".github/CODEOWNERS"
-  content             = format("* @Arrow-air/%s\n", data.github_team.owner.name)
-  commit_message      = "Provisioned by Terraform"
-  commit_email        = "automation@arrowair.com"
-  commit_author       = "Arrow automation"
-  overwrite_on_create = true
-}
-
 resource "github_repository_file" "files" {
   for_each = var.repository_files
 
