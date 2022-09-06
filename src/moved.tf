@@ -5,88 +5,64 @@
 # Can be removed after apply
 #
 #################################################
+moved {
+  from = module.repository["cla-bot"].github_repository_file.CODEOWNERS
+  to   = module.repository["cla-bot"].github_repository_file.files[".github/CODEOWNERS"]
+}
 
 moved {
-  from = github_repository.lib_template_rust
-  to   = module.repository_lib_template["rust"].github_repository.repository
+  from = module.repository["benchmarks"].github_repository_file.CODEOWNERS
+  to   = module.repository["benchmarks"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_repository.svc_template_python
-  to   = module.repository_svc_template["python"].github_repository.repository
+  from = module.repository["tools"].github_repository_file.CODEOWNERS
+  to   = module.repository["tools"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_repository.svc_template_rust
-  to   = module.repository_svc_template["rust"].github_repository.repository
+  from = module.repository["website"].github_repository_file.CODEOWNERS
+  to   = module.repository["website"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_repository.svc_template_typescript
-  to   = module.repository_svc_template["typescript"].github_repository.repository
+  from = module.repository["se-services"].github_repository_file.CODEOWNERS
+  to   = module.repository["se-services"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_team_repository.lib_template_rust_maintainer
-  to   = module.repository_lib_template["rust"].github_team_repository.maintainer["services"]
+  from = module.repository["clabot-config"].github_repository_file.CODEOWNERS
+  to   = module.repository["clabot-config"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_team_repository.svc_template_python_maintainer
-  to   = module.repository_svc_template["python"].github_team_repository.maintainer["services"]
+  from = module.repository_lib_template["rust"].github_repository_file.CODEOWNERS
+  to   = module.repository_lib_template["rust"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_team_repository.svc_template_rust_maintainer
-  to   = module.repository_svc_template["rust"].github_team_repository.maintainer["services"]
+  from = module.repository_svc_template["rust"].github_repository_file.CODEOWNERS
+  to   = module.repository_svc_template["rust"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = github_team_repository.svc_template_typescript_maintainer
-  to   = module.repository_svc_template["typescript"].github_team_repository.maintainer["services"]
+  from = module.repository_svc_template["python"].github_repository_file.CODEOWNERS
+  to   = module.repository_svc_template["python"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = module.tf_repository["github"].github_branch_default.default
-  to   = module.repository_tf["github"].github_branch_default.default
+  from = module.repository_svc_template["typescript"].github_repository_file.CODEOWNERS
+  to   = module.repository_svc_template["typescript"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = module.tf_repository["github"].github_branch_protection.all["tf-github"]
-  to   = module.repository_tf["github"].github_branch_protection.all["tf-github"]
+  from = module.repository_rust_svc["storage"].github_repository_file.CODEOWNERS
+  to   = module.repository_rust_svc["storage"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = module.tf_repository["github"].github_branch_protection.protection["main"]
-  to   = module.repository_tf["github"].github_branch_protection.protection["main"]
+  from = module.repository_rust_svc["scheduler"].github_repository_file.CODEOWNERS
+  to   = module.repository_rust_svc["scheduler"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = module.tf_repository["github"].github_repository.repository
-  to   = module.repository_tf["github"].github_repository.repository
+  from = module.repository_rust_lib["router"].github_repository_file.CODEOWNERS
+  to   = module.repository_rust_lib["router"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = module.tf_repository["github"].github_repository_file.CODEOWNERS
-  to   = module.repository_tf["github"].github_repository_file.CODEOWNERS
+  from = module.repository_tf["github"].github_repository_file.CODEOWNERS
+  to   = module.repository_tf["github"].github_repository_file.files[".github/CODEOWNERS"]
 }
 moved {
-  from = module.tf_repository["github"].github_repository_webhook.map["discord"]
-  to   = module.repository_tf["github"].github_repository_webhook.map["discord"]
-}
-moved {
-  from = module.tf_repository["github"].github_team_repository.maintainer["devops"]
-  to   = module.repository_tf["github"].github_team_repository.maintainer["devops"]
-}
-moved {
-  from = module.tf_repository["github"].github_team_repository.maintainer["services"]
-  to   = module.repository_tf["github"].github_team_repository.maintainer["services"]
-}
-moved {
-  from = module.tf_repository["onboarding"].github_branch_default.default
-  to   = module.repository_tf["onboarding"].github_branch_default.default
-}
-moved {
-  from = module.tf_repository["onboarding"].github_repository.repository
-  to   = module.repository_tf["onboarding"].github_repository.repository
-}
-moved {
-  from = module.tf_repository["onboarding"].github_repository_file.CODEOWNERS
-  to   = module.repository_tf["onboarding"].github_repository_file.CODEOWNERS
-}
-moved {
-  from = module.tf_repository["onboarding"].github_repository_webhook.map["discord"]
-  to   = module.repository_tf["onboarding"].github_repository_webhook.map["discord"]
-}
-moved {
-  from = module.tf_repository["onboarding"].github_team_repository.maintainer["devops"]
-  to   = module.repository_tf["onboarding"].github_team_repository.maintainer["devops"]
+  from = module.repository_tf["onboarding"].github_repository_file.CODEOWNERS
+  to   = module.repository_tf["onboarding"].github_repository_file.files[".github/CODEOWNERS"]
 }

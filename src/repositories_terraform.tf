@@ -49,6 +49,10 @@ module "repository_tf" {
   default_branch = each.value.default_branch
   webhooks       = each.value.webhooks
 
+  repository_files = { for file, path in local.template_files :
+    file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+  }
+
   collaborators = {
     maintainers = ["services"]
   }
