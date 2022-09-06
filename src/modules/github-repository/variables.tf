@@ -66,7 +66,7 @@ variable "protected_branches" {
 
   type = map(object({
     pattern                         = optional(string)
-    enforce_admins                  = optional(bool, true)
+    enforce_admins                  = optional(bool, false)
     allows_deletions                = optional(bool, false)
     allows_force_pushes             = optional(bool, false)
     require_conversation_resolution = optional(bool, true)
@@ -127,7 +127,7 @@ variable "default_branch_protection_settings" {
   description = "Settings to use for protected branches created"
 
   type = object({
-    enforce_admins                  = optional(bool, true)
+    enforce_admins                  = optional(bool, false)
     allows_deletions                = optional(bool, false)
     allows_force_pushes             = optional(bool, false)
     require_conversation_resolution = optional(bool, true)
@@ -162,7 +162,7 @@ variable "default_branch_protection_settings" {
   })
 
   default = {
-    enforce_admins                  = true
+    enforce_admins                  = false
     allows_deletions                = false
     allows_force_pushes             = false
     require_conversation_resolution = true
