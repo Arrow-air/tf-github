@@ -80,6 +80,14 @@ locals {
         }
       }
     }
+    "tool-simulation" = {
+      description      = "Simulated agents to load test the Arrow Services"
+      visibility       = "public"
+      owner_team       = "services"
+      default_branch   = "develop"
+      webhooks         = try(local.webhooks["services"], {})
+      repository_files = local.rust_default.files
+    }
   }
 }
 
