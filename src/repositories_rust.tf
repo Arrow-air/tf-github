@@ -5,7 +5,8 @@
 #####################################################################
 locals {
   rust_lib = {
-    files = local.rust_default.files
+    template_files = local.rust_default.template_files
+    files          = local.rust_default.files
 
     repos = {
       "router" = {
@@ -18,7 +19,8 @@ locals {
   }
 
   rust_svc = {
-    files = local.rust_default.files
+    template_files = local.rust_default.template_files
+    files          = local.rust_default.files
 
     repos = {
       "storage" = {
@@ -39,6 +41,9 @@ locals {
     files = {
       ".editorconfig" = {
         content = file("templates/rust-all/.editorconfig")
+      },
+      ".cspell.config.yaml" = {
+        content = file("templates/rust-all/.cspell.config.yaml")
       },
       ".taplo.toml" = {
         content = file("templates/rust-all/.taplo.toml")
@@ -61,8 +66,8 @@ locals {
       ".github/workflows/python_ci.yml" = {
         content = file("templates/rust-all/.github/workflows/python_ci.yml")
       },
-      ".github/workflows/editorconfig_check.yml" = {
-        content = file("templates/rust-all/.github/workflows/editorconfig_check.yml")
+      ".github/workflows/sanity_checks.yml" = {
+        content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
       },
       ".github/workflows/pr_rebase.yml" = {
         content = file("templates/rust-all/.github/workflows/pr_rebase.yml")
@@ -91,7 +96,7 @@ module "repository_rust_lib" {
   template    = module.repository_lib_template["rust"].repository.name
   repository_files = merge(
     local.rust_lib.files,
-    { for file, path in local.rust_default.template_files :
+    { for file, path in local.rust_lib.template_files :
       file => {
         content = templatefile(path, {
           owner_team = each.value.owner_team
@@ -123,8 +128,8 @@ module "repository_rust_svc" {
   description = format("Arrow Service - %s", each.value.description)
   template    = module.repository_svc_template["rust"].repository.name
   repository_files = merge(
-    local.rust_lib.files,
-    { for file, path in local.rust_default.template_files :
+    local.rust_svc.files,
+    { for file, path in local.rust_svc.template_files :
       file => {
         content = templatefile(path, {
           owner_team = each.value.owner_team

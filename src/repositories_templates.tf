@@ -9,6 +9,17 @@ locals {
     repos = {
       "rust" = {
         description = "Rust libraries"
+        files = merge(
+          local.rust_lib.files,
+          { for file, path in local.rust_lib.template_files :
+            file => { content = templatefile(path, {
+              owner_team = "services"
+              type       = "lib"
+              name       = "lib-rust"
+              port       = ""
+              }
+          ) } }
+        )
       }
     }
   }
@@ -19,6 +30,18 @@ locals {
         description = "TypeScript services"
       }
       "rust" = {
+        template_files = local.rust_svc.template_files
+        files = merge(
+          local.rust_svc.files,
+          { for file, path in local.rust_svc.template_files :
+            file => { content = templatefile(path, {
+              owner_team = "services"
+              type       = "svc"
+              name       = "svc-rust"
+              port       = 8080
+              }
+          ) } }
+        )
         description = "Rust services"
       }
       "python" = {
@@ -55,9 +78,12 @@ module "repository_lib_template" {
   default_branch = each.value.default_branch
   webhooks       = each.value.webhooks
 
-  repository_files = { for file, path in local.template_files :
-    file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
-  }
+  repository_files = merge(
+    try(each.value.files, {}),
+    { for file, path in local.template_files :
+      file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+    }
+  )
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
@@ -79,9 +105,12 @@ module "repository_svc_template" {
   default_branch = each.value.default_branch
   webhooks       = each.value.webhooks
 
-  repository_files = { for file, path in local.template_files :
-    file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
-  }
+  repository_files = merge(
+    try(each.value.files, {}),
+    { for file, path in local.template_files :
+      file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+    }
+  )
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }

@@ -24,7 +24,7 @@ As soon as the PR is merged to `main`, a workflow will run to deploy the changes
 # Repository management
 
 All repositories are created through the internal `github-repository` module, allowing for easy management of branch protections, files and webhooks.
-Repositories that require similar settings, are grouped into seperate files. The configurations provided by these `repositories_*.tf` files also enforce naming conventions.
+Repositories that require similar settings, are grouped into separate files. The configurations provided by these `repositories_*.tf` files also enforce naming conventions.
 
 The following repository types are currently pre-defined:
  * `tf`  -- Repositories containing Terraform code

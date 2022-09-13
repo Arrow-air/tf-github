@@ -1,2 +1,6 @@
+# Terraform cache files
 .terraform*
 terraform.tfstate*
+
+# Don't add vscode meta files
+.vscode
