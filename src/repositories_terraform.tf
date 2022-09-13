@@ -18,6 +18,12 @@ locals {
   }
 
   terraform_default = {
+    files = {
+      ".editorconfig" = {
+        content = file("templates/terraform/.editorconfig")
+      }
+    }
+
     settings = {
       owner_team     = "devops"
       visibility     = "public"
@@ -49,9 +55,12 @@ module "repository_tf" {
   default_branch = each.value.default_branch
   webhooks       = each.value.webhooks
 
-  repository_files = { for file, path in local.template_files :
-    file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
-  }
+  repository_files = merge(
+    local.terraform_default.files,
+    { for file, path in local.template_files :
+      file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+    }
+  )
 
   collaborators = {
     maintainers = ["services"]

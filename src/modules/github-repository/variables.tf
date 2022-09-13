@@ -188,7 +188,7 @@ variable "enable_discord_events" {
 }
 
 variable "webhooks" {
-  description = "Map of webhooks to create for the repository. Please note that urls contain secrets, they should be taken from a secret value and not commited into the repository as plain text"
+  description = "Map of webhooks to create for the repository. Please note that urls contain secrets, they should be taken from a secret value and not added into the repository as plain text"
   type = map(object({
     active = optional(bool, true)
     events = list(string)

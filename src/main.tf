@@ -50,6 +50,7 @@ locals {
       description = "Software used for Arrow engineering"
       visibility  = "public"
       owner_team  = "devops"
+      webhooks    = try(local.webhooks["services"], {})
       repository_files = {
         ".github/CODEOWNERS" = {
           content = file("templates/tools/.github/CODEOWNERS")
@@ -63,6 +64,7 @@ locals {
       description      = "In-house benchmarks for various frameworks."
       visibility       = "public"
       owner_team       = "services"
+      webhooks         = try(local.webhooks["services"], {})
       repository_files = local.rust_default.files
     }
     "se-services" = {
@@ -70,6 +72,7 @@ locals {
       description    = "Systems Engineering documentation for Aerial Mobility Services"
       visibility     = "public"
       owner_team     = "services"
+      webhooks       = try(local.webhooks["services"], {})
 
       default_branch_protection_settings = {
         required_pull_request_reviews = {
@@ -88,6 +91,8 @@ module "repository" {
   description    = each.value.description
   visibility     = each.value.visibility
   default_branch = try(each.value.default_branch, "main")
+  webhooks       = try(each.value.webhooks, {})
+
   repository_files = merge(
     { for file, path in local.template_files :
       file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
