@@ -28,6 +28,9 @@ locals {
       },
       "scheduler" = {
         description = "Fleet Routing and Flight Planner"
+      },
+      "cargo" = {
+        description = "Public Requests for Cargo Services"
       }
     }
   }
