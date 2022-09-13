@@ -57,7 +57,8 @@ jobs:
         run: |
           terraform show -no-color tf.plan
 
-      - uses: actions/github-script@v6
+      - name: Add PR comment with plan output
+        uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.planshow.outputs.stdout }}"
@@ -114,6 +115,8 @@ jobs:
                 body: output
               })
             }
+        continue-on-error: true
+
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
