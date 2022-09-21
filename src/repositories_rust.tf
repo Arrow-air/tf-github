@@ -32,6 +32,9 @@ locals {
       "cargo" = {
         description = "Public Requests for Cargo Services"
       }
+      "pricing" = {
+        description = "Module for Pricing Flight Services"
+      }
     }
   }
 
