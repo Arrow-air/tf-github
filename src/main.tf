@@ -88,6 +88,14 @@ locals {
       webhooks         = try(local.webhooks["services"], {})
       repository_files = local.rust_default.files
     }
+    "atc-core" = {
+      description      = "Air Traffic Control Library for UAM Activities"
+      visibility       = "public"
+      owner_team       = "services"
+      default_branch   = "develop"
+      webhooks         = try(local.webhooks["services"], {})
+      repository_files = local.rust_default.files
+    }
   }
 }
 
