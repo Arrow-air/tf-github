@@ -140,7 +140,7 @@ module "repository_rust_svc" {
         content = templatefile(path, {
           owner_team = each.value.owner_team
           type       = "svc"
-          name       = format("lib-%s", each.key)
+          name       = format("svc-%s", each.key)
           port       = format("80%02.0f", index(keys(local.rust_svc.repos), each.key))
         })
       }
