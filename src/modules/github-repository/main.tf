@@ -6,6 +6,14 @@ locals {
       (var.default_branch) = var.default_branch_protection_settings
     }
   )
+
+  github_owner = var.github_owner
+  start_branch = var.template == null ? "main" : data.github_repository.template[var.template].default_branch
+}
+
+data "github_repository" "template" {
+  for_each  = toset(var.template == null ? [] : [var.template])
+  full_name = format("%s/%s", local.github_owner, each.value)
 }
 
 data "github_team" "owner" {
@@ -29,7 +37,7 @@ resource "github_repository" "repository" {
     for_each = var.template == null ? [] : [var.template]
 
     content {
-      owner      = "Arrow-air"
+      owner      = local.github_owner
       repository = template.value
     }
   }
@@ -78,10 +86,11 @@ resource "github_team_repository" "pusher" {
 #
 ########################################################
 resource "github_branch" "branch" {
-  for_each = setsubtract(keys(local.protected_branches), ["main"])
+  for_each = setsubtract(keys(local.protected_branches), [local.start_branch])
 
-  repository = github_repository.repository.name
-  branch     = each.key
+  repository    = github_repository.repository.name
+  branch        = each.key
+  source_branch = local.start_branch
 }
 
 resource "github_branch_default" "default" {
@@ -142,7 +151,7 @@ resource "github_branch_protection" "all" {
 
 ########################################################
 #
-# Create environments 
+# Create environments
 #
 ########################################################
 resource "github_repository_environment" "env" {
