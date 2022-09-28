@@ -4,6 +4,12 @@ variable "terraform_app_node_id" {
   default     = "A_kwHOBayTi84AAq0w"
 }
 
+variable "github_owner" {
+  description = "The namespace to be used to create repositories"
+  type        = string
+  default     = "Arrow-air"
+}
+
 variable "name" {
   description = "The repository name"
   type        = string
