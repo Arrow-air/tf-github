@@ -2,6 +2,7 @@
 #
 ## DO NOT EDIT!
 # This file was provisioned by Terraform
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-all/.cargo-husky/hooks/pre-commit
 ##
 #
 # This hook was set by cargo-husky v1.5.0: https://github.com/rhysd/cargo-husky#readme

@@ -19,8 +19,32 @@ locals {
     }
   }
 
+  files = {
+    ".github/workflows/sanity_checks.yml" = {
+      content = file("templates/all/.github/workflows/sanity_checks.yml")
+    },
+    ".editorconfig" = {
+      content = file("templates/all/.editorconfig")
+    },
+    ".cspell.config.yaml" = {
+      content = file("templates/all/.cspell.config.yaml")
+    },
+    ".make/base.mk" = {
+      content = file("templates/all/.make/base.mk")
+    },
+    ".make/cspell.mk" = {
+      content = file("templates/all/.make/cspell.mk")
+    },
+    ".make/editorconfig.mk" = {
+      content = file("templates/all/.make/editorconfig.mk")
+    },
+    ".make/markdown.mk" = {
+      content = file("templates/all/.make/markdown.mk")
+    },
+  }
   template_files = {
     ".github/CODEOWNERS" = "templates/all/.github/CODEOWNERS.tftpl"
+    "Makefile"           = "templates/all/Makefile"
   }
 
   repos = {
@@ -111,7 +135,7 @@ module "repository" {
 
   repository_files = merge(
     { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = each.key }) }
     },
     try(each.value.repository_files, {})
   )

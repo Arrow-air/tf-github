@@ -44,12 +44,18 @@ locals {
       ".gitignore" = "templates/rust-all/.gitignore.tftpl"
     })
 
-    files = {
-      ".editorconfig" = {
-        content = file("templates/rust-all/.editorconfig")
+    files = merge(local.files, {
+      ".make/docker.mk" = {
+        content = file("templates/all/.make/docker.mk")
       },
-      ".cspell.config.yaml" = {
-        content = file("templates/rust-all/.cspell.config.yaml")
+      ".make/python.mk" = {
+        content = file("templates/all/.make/python.mk")
+      },
+      ".make/rust.mk" = {
+        content = file("templates/all/.make/rust.mk")
+      },
+      ".make/toml.mk" = {
+        content = file("templates/all/.make/toml.mk")
       },
       ".taplo.toml" = {
         content = file("templates/rust-all/.taplo.toml")
@@ -72,13 +78,13 @@ locals {
       ".github/workflows/python_ci.yml" = {
         content = file("templates/rust-all/.github/workflows/python_ci.yml")
       },
-      ".github/workflows/sanity_checks.yml" = {
-        content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
-      },
       ".github/workflows/pr_rebase.yml" = {
         content = file("templates/rust-all/.github/workflows/pr_rebase.yml")
+      },
+      ".github/workflows/sanity_checks.yml" = {
+        content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
       }
-    }
+    })
 
     settings = {
       owner_team                         = "services"
