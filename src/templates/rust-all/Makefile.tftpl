@@ -123,6 +123,11 @@ rust-check: check-cargo-registry docker-pull
 rust-test: check-cargo-registry docker-pull
 	@$(call cargo_run,test,--all)
 
+# make rust-example-grpc will run the 'grpc' example
+rust-example-%: check-cargo-registry docker-pull
+	@echo "$(YELLOW)cargo run --example $* ...$(NC)"
+	@$(call cargo_run,run --example $*)
+
 rust-clippy: check-cargo-registry docker-pull
 	@$(call cargo_run,clippy,--all -- -D warnings)
 
