@@ -24,7 +24,7 @@ all: test build release docker-build
 include .make/docker.mk
 %{ endif }
 
-test: rust-check rust-test rust-clippy rust-fmt toml-test python-test md-test-links
+test: rust-test-all cspell-test toml-test python-test md-test-links editorconfig-test
 tidy: rust-tidy toml-tidy python-tidy
 
 include .make/base.mk

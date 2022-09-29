@@ -108,7 +108,7 @@ module "repository_svc_template" {
   repository_files = merge(
     try(each.value.files, {}),
     { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("lib-template-%s", each.key) }) }
+      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("svc-template-%s", each.key) }) }
     }
   )
 
