@@ -134,9 +134,9 @@ resource "github_branch_protection" "protection" {
 }
 
 resource "github_branch_protection" "all" {
-  for_each               = var.visibility == "public" ? { (github_repository.repository.name) = "*" } : {}
-  repository_id          = each.key
-  pattern                = each.value
+  for_each               = var.visibility == "public" ? toset(["*", "**/**"]) : []
+  repository_id          = github_repository.repository.name
+  pattern                = each.key
   enforce_admins         = true
   allows_deletions       = true
   require_signed_commits = true
