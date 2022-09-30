@@ -85,11 +85,18 @@ locals {
       }
     }
     "benchmarks" = {
-      description      = "In-house benchmarks for various frameworks."
-      visibility       = "public"
-      owner_team       = "services"
-      webhooks         = try(local.webhooks["services"], {})
-      repository_files = local.rust_default.files
+      description = "In-house benchmarks for various frameworks."
+      visibility  = "public"
+      owner_team  = "services"
+      webhooks    = try(local.webhooks["services"], {})
+      repository_files = merge(
+        local.rust_default.files,
+        {
+          "Makefile" = {
+            content = file("templates/benchmarks/Makefile")
+          }
+        }
+      )
     }
     "se-services" = {
       default_branch = "develop"
@@ -134,11 +141,18 @@ module "repository" {
   webhooks       = try(each.value.webhooks, {})
 
   repository_files = merge(
+    local.files,
     { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = each.key }) }
+      file => {
+        content = templatefile(path, {
+          owner_team = each.value.owner_team
+          name       = each.key
+        })
+      }
     },
     try(each.value.repository_files, {})
   )
+
   collaborators = try(each.value.collaborators, {})
 
   default_branch_protection_settings = try(each.value.default_branch_protection_settings, {})
