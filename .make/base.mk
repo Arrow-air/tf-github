@@ -25,7 +25,7 @@ docker_run = docker run \
 	--name=$(DOCKER_NAME)-$@ \
 	--rm \
 	--user `id -u`:`id -g` \
-	--workdir=/usr/src/app/$(PACKAGE_NAME) \
+	--workdir=/usr/src/app \
 	-v "$(SOURCE_PATH)/:/usr/src/app" \
 	$(2) \
 	-t $(BUILD_IMAGE_NAME):$(BUILD_IMAGE_TAG) \
@@ -39,5 +39,3 @@ docker_run = docker run \
 
 docker-pull:
 	@docker pull -q $(BUILD_IMAGE_NAME):$(BUILD_IMAGE_TAG)
-
-export
