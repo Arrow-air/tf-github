@@ -18,6 +18,6 @@ trim_trailing_whitespace = false
 indent_size = 2
 [*.tf]
 indent_size = 2
-[{Makefile*,*.mk}]
+[{Makefile*,*.mk,*.sh}]
 indent_style = tab
 indent_size = 4
