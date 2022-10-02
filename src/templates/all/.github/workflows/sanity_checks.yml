@@ -1,6 +1,6 @@
 ## DO NOT EDIT!
 # This file was provisioned by Terraform
-# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-all/.github/workflows/sanity_checks.yml
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/all/.github/workflows/sanity_checks.yml
 
 name: Sanity checks
 
@@ -34,10 +34,3 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: make md-test-links
-
-  toml:
-    name: TOML Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: make toml-test

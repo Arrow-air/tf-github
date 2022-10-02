@@ -19,8 +19,32 @@ locals {
     }
   }
 
+  files = {
+    ".github/workflows/sanity_checks.yml" = {
+      content = file("templates/all/.github/workflows/sanity_checks.yml")
+    },
+    ".editorconfig" = {
+      content = file("templates/all/.editorconfig")
+    },
+    ".cspell.config.yaml" = {
+      content = file("templates/all/.cspell.config.yaml")
+    },
+    ".make/base.mk" = {
+      content = file("templates/all/.make/base.mk")
+    },
+    ".make/cspell.mk" = {
+      content = file("templates/all/.make/cspell.mk")
+    },
+    ".make/editorconfig.mk" = {
+      content = file("templates/all/.make/editorconfig.mk")
+    },
+    ".make/markdown.mk" = {
+      content = file("templates/all/.make/markdown.mk")
+    },
+  }
   template_files = {
     ".github/CODEOWNERS" = "templates/all/.github/CODEOWNERS.tftpl"
+    "Makefile"           = "templates/all/Makefile"
   }
 
   repos = {
@@ -61,11 +85,18 @@ locals {
       }
     }
     "benchmarks" = {
-      description      = "In-house benchmarks for various frameworks."
-      visibility       = "public"
-      owner_team       = "services"
-      webhooks         = try(local.webhooks["services"], {})
-      repository_files = local.rust_default.files
+      description = "In-house benchmarks for various frameworks."
+      visibility  = "public"
+      owner_team  = "services"
+      webhooks    = try(local.webhooks["services"], {})
+      repository_files = merge(
+        local.rust_default.files,
+        {
+          "Makefile" = {
+            content = file("templates/benchmarks/Makefile")
+          }
+        }
+      )
     }
     "se-services" = {
       default_branch = "develop"
@@ -110,11 +141,18 @@ module "repository" {
   webhooks       = try(each.value.webhooks, {})
 
   repository_files = merge(
+    local.files,
     { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+      file => {
+        content = templatefile(path, {
+          owner_team = each.value.owner_team
+          name       = each.key
+        })
+      }
     },
     try(each.value.repository_files, {})
   )
+
   collaborators = try(each.value.collaborators, {})
 
   default_branch_protection_settings = try(each.value.default_branch_protection_settings, {})

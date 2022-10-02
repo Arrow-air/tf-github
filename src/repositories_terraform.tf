@@ -18,11 +18,11 @@ locals {
   }
 
   terraform_default = {
-    files = {
-      ".editorconfig" = {
-        content = file("templates/terraform/.editorconfig")
-      }
-    }
+    template_files = merge(local.template_files, {
+    })
+
+    files = merge(local.files, {
+    })
 
     settings = {
       owner_team     = "devops"
@@ -57,8 +57,8 @@ module "repository_tf" {
 
   repository_files = merge(
     local.terraform_default.files,
-    { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team }) }
+    { for file, path in local.terraform_default.template_files :
+      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("tf-%s", each.key) }) }
     }
   )
 
