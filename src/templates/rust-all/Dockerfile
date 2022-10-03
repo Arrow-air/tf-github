@@ -8,7 +8,7 @@ ENV RUSTC_BOOTSTRAP=0
 
 COPY . /usr/src/app
 
-RUN cd /usr/src/app/src ; cargo build --release
+RUN cd /usr/src/app ; cargo build --release
 
 FROM alpine:latest
 ARG PACKAGE_NAME=
