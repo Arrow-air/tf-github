@@ -3,6 +3,7 @@
 # File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/all/.make/markdown.mk
 
 MARKDOWN_FILES ?= $(shell find . -type f -iname '*md' ! -iwholename "*./node_modules/*" ! -path "./build" ! -iwholename "*.terraform*" ! -iwholename "*.cargo/*")
+LINK_CHECKER_JSON ?= .link-checker.config.json
 
 .help-markdown:
 	@echo ""
@@ -10,6 +11,10 @@ MARKDOWN_FILES ?= $(shell find . -type f -iname '*md' ! -iwholename "*./node_mod
 	@echo "  $(BOLD)md-test-links$(SGR0)   -- Run markdown-link-check on all markdown files to catch dead links."
 
 md-test-links:
+ifeq ("$(wildcard $(LINK_CHECKER_JSON))","")
+	@echo "$(YELLOW)No $(LINK_CHECKER_JSON) found, creating...$(SGR0)"
+	echo -e "{\n}\n" > $(LINK_CHECKER_JSON)
+endif
 ifeq ("$(MARKDOWN_FILES)", "")
 	@echo "$(YELLOW)No markdown files found, skipping link validation...$(SGR0)"
 else
@@ -20,5 +25,6 @@ else
 		--user `id -u`:`id -g` \
 		-w "/usr/src/app" \
 		-v "$(PWD):/usr/src/app" \
-		-t ghcr.io/tcort/markdown-link-check:stable $(MARKDOWN_FILES)
+		-t ghcr.io/tcort/markdown-link-check:stable \
+		-c $(LINK_CHECKER_JSON) $(MARKDOWN_FILES)
 endif
