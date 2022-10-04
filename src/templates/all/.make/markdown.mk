@@ -11,13 +11,13 @@ LINK_CHECKER_JSON ?= .link-checker.config.json
 	@echo "  $(BOLD)md-test-links$(SGR0)   -- Run markdown-link-check on all markdown files to catch dead links."
 
 md-test-links:
+ifeq ("$(MARKDOWN_FILES)", "")
+	@echo "$(YELLOW)No markdown files found, skipping link validation...$(SGR0)"
+else
 ifeq ("$(wildcard $(LINK_CHECKER_JSON))","")
 	@echo "$(YELLOW)No $(LINK_CHECKER_JSON) found, creating...$(SGR0)"
 	echo -e "{\n}\n" > $(LINK_CHECKER_JSON)
 endif
-ifeq ("$(MARKDOWN_FILES)", "")
-	@echo "$(YELLOW)No markdown files found, skipping link validation...$(SGR0)"
-else
 	@echo "$(CYAN)Checking if all document links are valid...$(SGR0)"
 	@docker run \
 		--name=$(DOCKER_NAME)-$@ \
