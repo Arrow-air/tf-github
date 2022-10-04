@@ -15,7 +15,7 @@ CSPELL_PROJECT_WORDS ?= .cspell.project-words.txt
 cspell-test: docker-pull
 ifeq ("$(wildcard $(CSPELL_PROJECT_WORDS))","")
 	@echo "$(YELLOW)No $(CSPELL_PROJECT_WORDS) found, creating...$(SGR0)"
-	echo -e "\n" > $(CSPELL_PROJECT_WORDS)
+	touch $(CSPELL_PROJECT_WORDS)
 endif
 	@echo "$(CYAN)Checking for spelling errors...$(SGR0)"
 	@$(call docker_run,cspell --words-only --unique "**/**" -c .cspell.config.yaml)
