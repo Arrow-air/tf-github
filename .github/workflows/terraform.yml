@@ -50,7 +50,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          terraform plan -no-color -lock=false -input=false -out tf.plan
+          terraform plan -no-color -lock=false -refresh=false -input=false -out tf.plan
         continue-on-error: true
 
       - name: Terraform Plan Show
