@@ -6,24 +6,22 @@ DOCKER_NAME := arrow-${name}
 
 # Combined targets
 %{ if type == "lib" }
-export
-
 help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-toml
-all: test build release publish
+all: test build release rust-publish
+build: rust-build
 %{ else }
 IMAGE_NAME   := ${name}
 PACKAGE_NAME := $(IMAGE_NAME)
 DOCKER_PORT  := 8080
 HOST_PORT    := ${port}
 
-export
-
 help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-toml .help-docker
-all: test build release docker-build
+build: rust-build docker-build
+all: test build release
 
 include .make/docker.mk
 %{ endif }
-
+release: rust-release
 test: rust-test-all cspell-test toml-test python-test md-test-links editorconfig-test
 tidy: rust-tidy toml-tidy python-tidy
 
