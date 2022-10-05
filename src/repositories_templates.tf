@@ -8,18 +8,9 @@ locals {
   lib_template = {
     repos = {
       "rust" = {
-        description = "Rust libraries"
-        files = merge(
-          local.rust_lib.files,
-          { for file, path in local.rust_lib.template_files :
-            file => { content = templatefile(path, {
-              owner_team = "services"
-              type       = "lib"
-              name       = "lib-rust"
-              port       = ""
-              }
-          ) } }
-        )
+        description    = "Rust libraries"
+        files          = local.rust_lib.files
+        template_files = local.rust_lib.template_files
       }
     }
   }
@@ -74,9 +65,14 @@ module "repository_lib_template" {
 
   repository_files = merge(
     try(each.value.files, {}),
-    { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("lib-template-%s", each.key) }) }
-    }
+    { for file, path in try(each.value.template_files, {}) :
+      file => { content = templatefile(path, {
+        owner_team = each.value.owner_team
+        type       = "lib"
+        name       = format("lib-template-%s", each.key)
+        port       = ""
+        }
+    ) } }
   )
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
@@ -106,7 +102,7 @@ module "repository_svc_template" {
         owner_team = each.value.owner_team
         type       = "svc"
         name       = format("svc-template-%s", each.key)
-        port       = 8080
+        port       = 8080 # arbitrary, template files not used in prod
         }
     ) } }
   )
