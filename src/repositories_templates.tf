@@ -8,18 +8,9 @@ locals {
   lib_template = {
     repos = {
       "rust" = {
-        description = "Rust libraries"
-        files = merge(
-          local.rust_lib.files,
-          { for file, path in local.rust_lib.template_files :
-            file => { content = templatefile(path, {
-              owner_team = "services"
-              type       = "lib"
-              name       = "lib-rust"
-              port       = ""
-              }
-          ) } }
-        )
+        description    = "Rust libraries"
+        files          = local.rust_lib.files
+        template_files = local.rust_lib.template_files
       }
     }
   }
@@ -27,25 +18,19 @@ locals {
   svc_template = {
     repos = {
       "typescript" = {
-        description = "TypeScript services"
+        description    = "TypeScript services"
+        files          = local.files
+        template_files = local.template_files
       }
       "rust" = {
+        files          = local.rust_svc.files
         template_files = local.rust_svc.template_files
-        files = merge(
-          local.rust_svc.files,
-          { for file, path in local.rust_svc.template_files :
-            file => { content = templatefile(path, {
-              owner_team = "services"
-              type       = "svc"
-              name       = "svc-rust"
-              port       = 8080
-              }
-          ) } }
-        )
-        description = "Rust services"
+        description    = "Rust services"
       }
       "python" = {
-        description = "Python services"
+        description    = "Python services"
+        files          = local.files
+        template_files = local.template_files
       }
     }
   }
@@ -80,9 +65,14 @@ module "repository_lib_template" {
 
   repository_files = merge(
     try(each.value.files, {}),
-    { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("lib-template-%s", each.key) }) }
-    }
+    { for file, path in try(each.value.template_files, {}) :
+      file => { content = templatefile(path, {
+        owner_team = each.value.owner_team
+        type       = "lib"
+        name       = format("lib-template-%s", each.key)
+        port       = ""
+        }
+    ) } }
   )
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
@@ -107,9 +97,14 @@ module "repository_svc_template" {
 
   repository_files = merge(
     try(each.value.files, {}),
-    { for file, path in local.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("svc-template-%s", each.key) }) }
-    }
+    { for file, path in try(each.value.template_files, {}) :
+      file => { content = templatefile(path, {
+        owner_team = each.value.owner_team
+        type       = "svc"
+        name       = format("svc-template-%s", each.key)
+        port       = 8080 # arbitrary, template files not used in prod
+        }
+    ) } }
   )
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
