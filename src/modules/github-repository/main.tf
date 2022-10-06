@@ -139,7 +139,7 @@ resource "github_branch_protection" "all" {
   pattern                = each.key
   enforce_admins         = true
   allows_deletions       = true
-  require_signed_commits = true
+  require_signed_commits = false # We need to figure out how to ignore the Terraform commits for this to be set to true
   allows_force_pushes    = true
 
   depends_on = [

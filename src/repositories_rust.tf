@@ -20,7 +20,16 @@ locals {
 
   rust_svc = {
     template_files = local.rust_default.template_files
-    files          = local.rust_default.files
+    files = merge(
+      local.rust_default.files, {
+        "Dockerfile" = {
+          content = file("templates/rust-all/Dockerfile")
+        },
+        ".github/workflows/sanity_checks.yml" = {
+          content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
+        }
+      }
+    )
 
     repos = {
       "storage" = {

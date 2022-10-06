@@ -22,6 +22,8 @@ jobs:
     defaults:
       run:
         working-directory: src
+    concurrency:
+      group: terraform-${{ github.head_ref || 'main' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -48,7 +50,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          terraform plan -no-color -input=false -out tf.plan
+          terraform plan -no-color -lock=false -refresh=false -input=false -out tf.plan
         continue-on-error: true
 
       - name: Terraform Plan Show
@@ -118,9 +120,9 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
+        if: steps.plan.outcome == 'failure' && !contains(github.event.head_commit.message, 'Provisioned by Terraform')
         run: exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && !contains(github.event.head_commit.message, 'Provisioned by Terraform')
         run: terraform apply -auto-approve -input=false
