@@ -41,6 +41,9 @@ locals {
     ".make/markdown.mk" = {
       content = file("templates/all/.make/markdown.mk")
     },
+    "CONTRIBUTING.md" = {
+      content = file("templates/all/CONTRIBUTING.md")
+    },
   }
   template_files = {
     ".github/CODEOWNERS" = "templates/all/.github/CODEOWNERS.tftpl"
