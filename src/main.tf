@@ -115,12 +115,24 @@ locals {
       }
     }
     "tool-simulation" = {
-      description      = "Simulated agents to load test the Arrow Services"
-      visibility       = "public"
-      owner_team       = "services"
-      default_branch   = "develop"
-      webhooks         = try(local.webhooks["services"], {})
-      repository_files = local.rust_default.files
+      description    = "Simulated agents to load test the Arrow Services"
+      visibility     = "public"
+      owner_team     = "services"
+      default_branch = "develop"
+      webhooks       = try(local.webhooks["services"], {})
+      repository_files = merge(
+        local.rust_default.files,
+        { for file, path in local.rust_default.template_files :
+          file => {
+            content = templatefile(path, {
+              owner_team = "services"
+              type       = "svc"
+              name       = "tool-simulation"
+              port       = 3000
+            })
+          }
+        }
+      )
     }
     "atc-core" = {
       description      = "Air Traffic Control Library for UAM Activities"
