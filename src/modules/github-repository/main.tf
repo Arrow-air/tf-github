@@ -139,7 +139,7 @@ resource "github_branch_protection" "all" {
   pattern                = each.key
   enforce_admins         = true
   allows_deletions       = true
-  require_signed_commits = false # We need to figure out how to ignore the Terraform commits for this to be set to true
+  require_signed_commits = true
   allows_force_pushes    = true
 
   depends_on = [
@@ -189,9 +189,7 @@ resource "github_repository_file" "files" {
   content             = each.value.content
   overwrite_on_create = each.value.overwrite_on_create
 
-  commit_message = "Provisioned by Terraform"
-  commit_email   = "automation@arrowair.com"
-  commit_author  = "Arrow automation"
+  commit_message = lower(format("chore(ci): %s - provisioned by terraform", each.key))
 }
 
 ########################################################
