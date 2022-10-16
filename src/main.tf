@@ -143,11 +143,11 @@ locals {
       repository_files = local.rust_default.files
     }
     "cargo-gui-demo" = {
-      description      = "GUI demo for the cargo application."
-      visibility       = "public"
-      owner_team       = "services"
-      default_branch   = "develop"
-      webhooks         = try(local.webhooks["services"], {})
+      description    = "GUI demo for the cargo application."
+      visibility     = "public"
+      owner_team     = "services"
+      default_branch = "develop"
+      webhooks       = try(local.webhooks["services"], {})
     }
   }
 }
