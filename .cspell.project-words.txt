@@ -23,4 +23,6 @@ toset
 tput
 webdevelopers
 yapf
+commitlint
+commitlintrc
 healthcheck
