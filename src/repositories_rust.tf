@@ -23,7 +23,10 @@ locals {
     files = merge(
       local.rust_default.files, {
         "Dockerfile" = {
-          content = file("templates/rust-all/Dockerfile")
+          content = file("templates/rust-svc/Dockerfile")
+        },
+        "docker-compose.yml" = {
+          content = file("templates/rust-svc/docker-compose.yml")
         },
         ".github/workflows/sanity_checks.yml" = {
           content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
