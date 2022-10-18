@@ -9,6 +9,7 @@ CARGO_INCREMENTAL   ?= 1
 RUSTC_BOOTSTRAP     ?= 0
 RELEASE_TARGET      ?= x86_64-unknown-linux-musl
 HOSTNAME            ?= $(DOCKER_NAME)-run
+PUBLISH_DRY_RUN     ?= 1
 
 # function with a generic template to run docker with the required values
 # Accepts $1 = command to run, $2 = additional command flags (optional)
@@ -38,6 +39,8 @@ rust-docker-pull:
 	@echo "  $(BOLD)rust-build$(SGR0)       -- Run 'cargo build'"
 	@echo "  $(BOLD)rust-release$(SGR0)     -- Run 'cargo build --release --target RELEASE_TARGET'"
 	@echo "                     (RELEASE_TARGET=$(RELEASE_TARGET))"
+	@echo "  $(BOLD)rust-publish$(SGR0)     -- Run 'cargo publish --package $(PACKAGE_NAME)-client-grpc'"
+	@echo "                     uses '--dry-run' by default, automation uses PUBLISH_DRY_RUN=0 to upload crate"
 	@echo "  $(BOLD)rust-clean$(SGR0)       -- Run 'cargo clean'"
 	@echo "  $(BOLD)rust-check$(SGR0)       -- Run 'cargo check'"
 	@echo "  $(BOLD)rust-test$(SGR0)        -- Run 'cargo test --all'"
@@ -62,6 +65,14 @@ rust-build: check-cargo-registry rust-docker-pull
 rust-release: check-cargo-registry rust-docker-pull
 	@echo "$(CYAN)Running cargo build --release...$(SGR0)"
 	@$(call cargo_run,build,--release --target $(RELEASE_TARGET))
+
+rust-publish: check-cargo-registry rust-docker-pull
+	@echo "$(CYAN)Running cargo publish --package $(PACKAGE_NAME)-client-grpc...$(SGR0)"
+ifeq ("$(PUBLISH_DRY_RUN)", "0")
+	@echo $(call cargo_run,publish,--package $(PACKAGE_NAME)-client-grpc --target $(RELEASE_TARGET))
+else
+	@$(call cargo_run,publish,--dry-run --package $(PACKAGE_NAME)-client-grpc --target $(RELEASE_TARGET))
+endif
 
 rust-clean: check-cargo-registry rust-docker-pull
 	@echo "$(CYAN)Running cargo clean...$(SGR0)"

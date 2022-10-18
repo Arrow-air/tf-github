@@ -8,9 +8,9 @@ IMAGE_NAME        ?= $(PACKAGE_NAME)
 .help-docker:
 	@echo ""
 	@echo "$(SMUL)$(BOLD)$(GREEN)Docker targets$(SGR0)"
-	@echo "  $(BOLD)docker-build$(SGR0)-- Run docker build to create new image"
-	@echo "  $(BOLD)docker-run$(SGR0)  -- Run docker container as a daemon, binding port $(HOST_PORT):$(DOCKER_PORT)"
-	@echo "  $(BOLD)docker-stop$(SGR0) -- Run 'docker kill $${DOCKER_NAME}-run' to stop our docker after running"
+	@echo "  $(BOLD)docker-build$(SGR0)  -- Run docker build to create new image"
+	@echo "  $(BOLD)docker-run$(SGR0)    -- Run docker container as a daemon, binding port $(HOST_PORT):$(DOCKER_PORT)"
+	@echo "  $(BOLD)docker-stop$(SGR0)   -- Run 'docker kill $${DOCKER_NAME}-run' to stop our docker after running"
 
 docker-build:
 	@DOCKER_BUILDKIT=1 docker build --build-arg PACKAGE_NAME=$(PACKAGE_NAME) --tag $(IMAGE_NAME):latest $(DOCKER_BUILD_PATH)

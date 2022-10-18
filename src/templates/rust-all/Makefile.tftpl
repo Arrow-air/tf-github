@@ -9,6 +9,7 @@ DOCKER_NAME := arrow-${name}
 help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-toml
 all: test build release rust-publish
 build: rust-build
+publish: rust-publish
 %{ else }
 IMAGE_NAME   := ${name}
 PACKAGE_NAME := $(IMAGE_NAME)
