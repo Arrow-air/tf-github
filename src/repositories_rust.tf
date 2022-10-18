@@ -129,7 +129,8 @@ module "repository_rust_lib" {
           owner_team = each.value.owner_team
           type       = "lib"
           name       = format("lib-%s", each.key)
-          port       = ""
+          port_rest  = ""
+          port_grpc  = ""
         })
       }
     }
@@ -162,7 +163,8 @@ module "repository_rust_svc" {
           owner_team = each.value.owner_team
           type       = "svc"
           name       = format("svc-%s", each.key)
-          port       = format("80%02.0f", index(keys(local.rust_svc.repos), each.key))
+          port_rest  = format("80%02.0f", index(keys(local.rust_svc.repos), each.key))
+          port_grpc  = format("500%02.0f", index(keys(local.rust_svc.repos), each.key))
         })
       }
     }

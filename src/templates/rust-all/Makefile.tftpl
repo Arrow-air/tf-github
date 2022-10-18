@@ -2,29 +2,34 @@
 # This file was provisioned by Terraform
 # File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-all/Makefile.tftpl
 
-DOCKER_NAME := arrow-${name}
-
-# Combined targets
+DOCKER_NAME          := arrow-${name}
+PACKAGE_NAME         := $(name)
 %{ if type == "lib" }
-help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-toml
-all: test build release rust-publish
+PUBLISH_PACKAGE_NAME := $(name)
+
+help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-commitlint .help-toml
 build: rust-build
-publish: rust-publish
 %{ else }
-IMAGE_NAME   := ${name}
-PACKAGE_NAME := $(IMAGE_NAME)
-DOCKER_PORT  := 8000
-HOST_PORT    := ${port}
+IMAGE_NAME           := ${name}
+PUBLISH_PACKAGE_NAME := $(name)-client-grpc
+DOCKER_PORT_REST     := 8000
+DOCKER_PORT_GRPC     := 50051
+HOST_PORT_REST       := ${port_rest}
+HOST_PORT_GRPC       := ${port_grpc}
 
 help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-commitlint .help-toml .help-docker
 build: rust-build docker-build
-all: test build release
 
 include .make/docker.mk
 %{ endif }
+export
+
+clean: rust-clean
 release: rust-release
+publish: rust-publish
 test: rust-test-all cspell-test toml-test python-test md-test-links editorconfig-test
 tidy: rust-tidy toml-tidy python-tidy editorconfig-tidy
+all: clean test build release publish
 
 include .make/base.mk
 include .make/cspell.mk

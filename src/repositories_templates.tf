@@ -70,7 +70,8 @@ module "repository_lib_template" {
         owner_team = each.value.owner_team
         type       = "lib"
         name       = format("lib-template-%s", each.key)
-        port       = ""
+        port_rest  = ""
+        port_grpc  = ""
         }
     ) } }
   )
@@ -102,7 +103,8 @@ module "repository_svc_template" {
         owner_team = each.value.owner_team
         type       = "svc"
         name       = format("svc-template-%s", each.key)
-        port       = 8080 # arbitrary, template files not used in prod
+        port_rest  = 8080  # arbitrary, template files not used in prod
+        port_grpc  = 50051 # arbitrary, template files not used in prod
         }
     ) } }
   )

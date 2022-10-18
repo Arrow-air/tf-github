@@ -39,7 +39,7 @@ rust-docker-pull:
 	@echo "  $(BOLD)rust-build$(SGR0)       -- Run 'cargo build'"
 	@echo "  $(BOLD)rust-release$(SGR0)     -- Run 'cargo build --release --target RELEASE_TARGET'"
 	@echo "                     (RELEASE_TARGET=$(RELEASE_TARGET))"
-	@echo "  $(BOLD)rust-publish$(SGR0)     -- Run 'cargo publish --package $(PACKAGE_NAME)-client-grpc'"
+	@echo "  $(BOLD)rust-publish$(SGR0)     -- Run 'cargo publish --package $(PUBLISH_PACKAGE_NAME)'"
 	@echo "                     uses '--dry-run' by default, automation uses PUBLISH_DRY_RUN=0 to upload crate"
 	@echo "  $(BOLD)rust-clean$(SGR0)       -- Run 'cargo clean'"
 	@echo "  $(BOLD)rust-check$(SGR0)       -- Run 'cargo check'"
@@ -67,11 +67,11 @@ rust-release: check-cargo-registry rust-docker-pull
 	@$(call cargo_run,build,--release --target $(RELEASE_TARGET))
 
 rust-publish: check-cargo-registry rust-docker-pull
-	@echo "$(CYAN)Running cargo publish --package $(PACKAGE_NAME)-client-grpc...$(SGR0)"
+	@echo "$(CYAN)Running cargo publish --package $(PUBLISH_PACKAGE_NAME)...$(SGR0)"
 ifeq ("$(PUBLISH_DRY_RUN)", "0")
-	@echo $(call cargo_run,publish,--package $(PACKAGE_NAME)-client-grpc --target $(RELEASE_TARGET))
+	@echo $(call cargo_run,publish,--package $(PUBLISH_PACKAGE_NAME) --target $(RELEASE_TARGET))
 else
-	@$(call cargo_run,publish,--dry-run --package $(PACKAGE_NAME)-client-grpc --target $(RELEASE_TARGET))
+	@$(call cargo_run,publish,--dry-run --package $(PUBLISH_PACKAGE_NAME) --target $(RELEASE_TARGET))
 endif
 
 rust-clean: check-cargo-registry rust-docker-pull
@@ -94,6 +94,8 @@ rust-example-%: check-cargo-registry rust-docker-pull
 		-e CARGO_INCREMENTAL=1 \
 		-e RUSTC_BOOTSTRAP=0 \
 		-e EXAMPLE_TARGET=$(EXAMPLE_TARGET) \
+		-e SERVER_PORT_GRPC=$(DOCKER_PORT_GRPC) \
+		-e SERVER_PORT_REST=$(DOCKER_PORT_REST) \
 		example && docker compose stop
 
 rust-clippy: check-cargo-registry rust-docker-pull
