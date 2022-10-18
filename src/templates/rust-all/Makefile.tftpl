@@ -10,7 +10,6 @@ PUBLISH_PACKAGE_NAME := $(name)
 help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-commitlint .help-toml
 build: rust-build
 %{ else }
-IMAGE_NAME           := ${name}
 PUBLISH_PACKAGE_NAME := $(name)-client-grpc
 DOCKER_PORT_REST     := 8000
 DOCKER_PORT_GRPC     := 50051

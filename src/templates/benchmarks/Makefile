@@ -26,7 +26,7 @@ docker_run = docker run \
 	--user `id -u`:`id -g` \
 	-v "$(PWD):/usr/src/app" \
 	$(2) \
-	-t $(BUILD_IMAGE_NAME):$(BUILD_IMAGE_TAG) \
+	-t $(RUST_IMAGE_NAME):$(RUST_IMAGE_TAG) \
 	$(1)
 
 SOURCE_PATH=$(PWD)/server-web
