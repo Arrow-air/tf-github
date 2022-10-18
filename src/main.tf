@@ -26,6 +26,9 @@ locals {
     ".editorconfig" = {
       content = file("templates/all/.editorconfig")
     },
+    ".commitlintrc.yml" = {
+      content = file("templates/all/.commitlintrc.yml")
+    },
     ".cspell.config.yaml" = {
       content = file("templates/all/.cspell.config.yaml")
     },
@@ -34,6 +37,9 @@ locals {
     },
     ".make/cspell.mk" = {
       content = file("templates/all/.make/cspell.mk")
+    },
+    ".make/commitlint.mk" = {
+      content = file("templates/all/.make/commitlint.mk")
     },
     ".make/editorconfig.mk" = {
       content = file("templates/all/.make/editorconfig.mk")

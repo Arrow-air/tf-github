@@ -81,6 +81,9 @@ locals {
       ".cargo-husky/hooks/pre-push" = {
         content = file("templates/rust-all/.cargo-husky/hooks/pre-push")
       },
+      ".cargo-husky/hooks/commit-msg" = {
+        content = file("templates/rust-all/.cargo-husky/hooks/commit-msg")
+      },
       ".cargo-husky/hooks/README.md" = {
         content = file("templates/rust-all/.cargo-husky/hooks/README.md")
       },
