@@ -134,7 +134,8 @@ locals {
               owner_team = "services"
               type       = "svc"
               name       = "tool-simulation"
-              port       = 3000
+              port_rest  = 3000
+              port_grpc  = ""
             })
           }
         }
