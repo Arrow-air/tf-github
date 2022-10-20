@@ -19,7 +19,7 @@ else
 cargo_run = docker run \
 	--name=$(DOCKER_NAME)-$@ \
 	--rm \
-	--user `id -u`:`id -g` \
+	--user $(id -u):$(id -g) \
 	--workdir=/usr/src/app \
 	-v "$(SOURCE_PATH)/:/usr/src/app" \
 	-v "$(SOURCE_PATH)/.cargo/registry:/usr/local/cargo/registry" \
