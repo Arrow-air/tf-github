@@ -89,7 +89,7 @@ rust-test: check-cargo-registry rust-docker-pull
 rust-example-%: EXAMPLE_TARGET=$*
 rust-example-%: check-cargo-registry rust-docker-pull
 	@docker compose run \
-		--user `id -u`:`id -g` \
+		--user $(id -u):$(id -g) \
 		--rm \
 		-e CARGO_INCREMENTAL=1 \
 		-e RUSTC_BOOTSTRAP=0 \

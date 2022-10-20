@@ -13,7 +13,7 @@ editorconfig-test:
 	@docker run \
 		--name=$(DOCKER_NAME)-$@ \
 		--rm \
-		--user `id -u`:`id -g` \
+		--user $(id -u):$(id -g) \
 		-w "/usr/src/app" \
 		-v "$(PWD):/usr/src/app" \
 		-t mstruebing/editorconfig-checker

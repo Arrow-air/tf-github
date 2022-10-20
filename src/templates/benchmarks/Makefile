@@ -23,7 +23,7 @@ include .make/python.mk
 docker_run = docker run \
 	--name=$(DOCKER_NAME)-$@ \
 	--rm \
-	--user `id -u`:`id -g` \
+	--user $(id -u):$(id -g) \
 	-v "$(PWD):/usr/src/app" \
 	$(2) \
 	-t $(RUST_IMAGE_NAME):$(RUST_IMAGE_TAG) \
