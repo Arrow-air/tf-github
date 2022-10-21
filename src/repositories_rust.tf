@@ -28,8 +28,8 @@ locals {
         "docker-compose.yml" = {
           content = file("templates/rust-svc/docker-compose.yml")
         },
-        ".github/workflows/sanity_checks.yml" = {
-          content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
+        ".github/workflows/release.yml" = {
+          content = file("templates/rust-svc/.github/workflows/release.yml")
         }
       }
     )
