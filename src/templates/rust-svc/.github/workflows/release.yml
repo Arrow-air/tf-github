@@ -152,6 +152,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          build-args: |
+            PACKAGE_NAME: ${{ env.PACKAGE_NAME }}
 
       - name: Clean Checkout
         uses: actions/checkout@v3
