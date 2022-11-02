@@ -128,6 +128,11 @@ locals {
       webhooks       = try(local.webhooks["services"], {})
       repository_files = merge(
         local.rust_default.files,
+        {
+          "Dockerfile" = {
+            content = file("templates/rust-all/Dockerfile")
+          }
+        },
         { for file, path in local.rust_default.template_files :
           file => {
             content = templatefile(path, {
