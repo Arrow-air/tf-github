@@ -19,6 +19,14 @@ locals {
   }
 
   rust_svc = {
+    settings = {
+      default_branch_protection_settings = {
+        required_pull_request_reviews = {
+          # Allow release automation app to update CHANGELOG.md and Cargo.toml files
+          pull_request_bypassers = ["A_kwHOBayTi84AA8vv"]
+        }
+      }
+    }
     template_files = local.rust_default.template_files
     files = merge(
       local.rust_default.files, {
@@ -37,6 +45,19 @@ locals {
     repos = {
       "storage" = {
         description = "Storage module"
+        # Override files list to provision with Terraform
+        # svc-storage handles it's own docker-compose.yml file
+        # due to extra backend services needed
+        files = merge(
+          local.rust_default.files, {
+            "Dockerfile" = {
+              content = file("templates/rust-svc/Dockerfile")
+            },
+            ".github/workflows/release.yml" = {
+              content = file("templates/rust-svc/.github/workflows/release.yml")
+            }
+          }
+        )
       },
       "scheduler" = {
         description = "Fleet Routing and Flight Planner"
@@ -156,7 +177,7 @@ module "repository_rust_svc" {
   description = format("Arrow Service - %s", each.value.description)
   template    = module.repository_svc_template["rust"].repository.name
   repository_files = merge(
-    local.rust_svc.files,
+    try(each.value.files, local.rust_svc.files),
     { for file, path in local.rust_svc.template_files :
       file => {
         content = templatefile(path, {
