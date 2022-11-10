@@ -1,7 +1,6 @@
 variable "terraform_app_node_id" {
-  description = "Node ID of terraform app, This node ID is found by querying the GitHub API `gh api -H \"Accept: application/vnd.github+json\" /apps/arrow-tf-github-repositories`"
+  description = "Node ID of terraform app, This node ID is found by querying the GitHub API `gh api -H \"Accept: application/vnd.github+json\" /apps/<your app slug>`"
   type        = string
-  default     = "A_kwHOBayTi84AAq0w"
 }
 
 variable "github_owner" {

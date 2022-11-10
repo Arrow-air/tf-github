@@ -1,4 +1,9 @@
+data "github_app" "arrow_tf_github_repositories" {
+  slug = "arrow-tf-github-repositories"
+}
+
 locals {
+  arrow_release_automation_node_id = data.github_app.arrow_tf_github_repositories.node_id
   # Secret provided by Terraform Cloud configuration on the workspace
   discord_services_integration_url = sensitive(var.discord_services_integration_url)
 
@@ -163,11 +168,12 @@ module "repository" {
   source   = "./modules/github-repository/"
   for_each = local.repos
 
-  name           = each.key
-  description    = each.value.description
-  visibility     = each.value.visibility
-  default_branch = try(each.value.default_branch, "main")
-  webhooks       = try(each.value.webhooks, {})
+  name                  = each.key
+  description           = each.value.description
+  visibility            = each.value.visibility
+  default_branch        = try(each.value.default_branch, "main")
+  webhooks              = try(each.value.webhooks, {})
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
   repository_files = merge(
     local.files,

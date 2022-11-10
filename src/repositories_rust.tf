@@ -19,14 +19,6 @@ locals {
   }
 
   rust_svc = {
-    settings = {
-      default_branch_protection_settings = {
-        required_pull_request_reviews = {
-          # Allow release automation app to update CHANGELOG.md and Cargo.toml files
-          pull_request_bypassers = ["A_kwHOBayTi84AA8vv"]
-        }
-      }
-    }
     template_files = local.rust_default.template_files
     files = merge(
       local.rust_default.files, {
@@ -158,10 +150,11 @@ module "repository_rust_lib" {
   )
 
   # Settings with defaults
-  owner_team     = each.value.owner_team
-  visibility     = each.value.visibility
-  default_branch = each.value.default_branch
-  webhooks       = each.value.webhooks
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
@@ -192,10 +185,11 @@ module "repository_rust_svc" {
   )
 
   # Settings with defaults
-  owner_team     = each.value.owner_team
-  visibility     = each.value.visibility
-  default_branch = each.value.default_branch
-  webhooks       = each.value.webhooks
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }

@@ -17,11 +17,6 @@ locals {
 
   svc_template = {
     repos = {
-      "typescript" = {
-        description    = "TypeScript services"
-        files          = local.files
-        template_files = local.template_files
-      }
       "rust" = {
         files          = local.rust_svc.files
         template_files = local.rust_svc.template_files
@@ -29,6 +24,32 @@ locals {
       }
       "python" = {
         description    = "Python services"
+        files          = local.files
+        template_files = local.template_files
+      }
+    }
+  }
+
+  web_template = {
+    settings = {
+      owner_team = "webdevelopers"
+    }
+    repos = {
+      "nuxt" = {
+        description    = "Nuxt Web Applications"
+        files          = local.files
+        template_files = local.template_files
+      }
+    }
+  }
+
+  mod_template = {
+    settings = {
+      owner_team = "webdevelopers"
+    }
+    repos = {
+      "nuxt" = {
+        description    = "Nuxt Modules"
         files          = local.files
         template_files = local.template_files
       }
@@ -58,10 +79,11 @@ module "repository_lib_template" {
   is_template = true
 
   # Settings with defaults
-  owner_team     = each.value.owner_team
-  visibility     = each.value.visibility
-  default_branch = each.value.default_branch
-  webhooks       = each.value.webhooks
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
   repository_files = merge(
     try(each.value.files, {}),
@@ -91,10 +113,11 @@ module "repository_svc_template" {
   is_template = true
 
   # Settings with defaults
-  owner_team     = each.value.owner_team
-  visibility     = each.value.visibility
-  default_branch = each.value.default_branch
-  webhooks       = each.value.webhooks
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
   repository_files = merge(
     try(each.value.files, {}),
@@ -111,3 +134,72 @@ module "repository_svc_template" {
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
+
+########################################################
+# Web Application repositories
+########################################################
+module "repository_web_template" {
+  source   = "./modules/github-repository/"
+  for_each = { for key, settings in local.web_template.repos : key => merge(local.template_default.settings, settings) }
+
+  name        = format("web-template-%s", each.key)
+  description = format("Arrow Web Application Template - %s", each.value.description)
+  is_template = true
+
+  # Settings with defaults
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
+
+  repository_files = merge(
+    try(each.value.files, {}),
+    { for file, path in try(each.value.template_files, {}) :
+      file => { content = templatefile(path, {
+        owner_team = each.value.owner_team
+        type       = "web"
+        name       = format("web-template-%s", each.key)
+        port_rest  = ""
+        port_grpc  = ""
+        }
+    ) } }
+  )
+
+  default_branch_protection_settings = each.value.default_branch_protection_settings
+}
+
+########################################################
+# Module repositories
+########################################################
+module "repository_mod_template" {
+  source   = "./modules/github-repository/"
+  for_each = { for key, settings in local.mod_template.repos : key => merge(local.template_default.settings, settings) }
+
+  name        = format("mod-template-%s", each.key)
+  description = format("Arrow Module Template - %s", each.value.description)
+  is_template = true
+
+  # Settings with defaults
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
+
+  repository_files = merge(
+    try(each.value.files, {}),
+    { for file, path in try(each.value.template_files, {}) :
+      file => { content = templatefile(path, {
+        owner_team = each.value.owner_team
+        type       = "mod"
+        name       = format("mod-template-%s", each.key)
+        port_rest  = ""
+        port_grpc  = ""
+        }
+    ) } }
+  )
+
+  default_branch_protection_settings = each.value.default_branch_protection_settings
+}
+
