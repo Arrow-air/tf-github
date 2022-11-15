@@ -1,0 +1,25 @@
+## DO NOT EDIT!
+# This file was provisioned by Terraform
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/nuxt-all/.gitignore
+
+# Dependencies
+node_modules
+
+# Nuxt build and generate output dirs
+.nuxt
+dist
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Don't add vscode or idea meta files
+.vscode
+.idea
+
+# Don't add DS_Store
+.DS_Store
+
+# env
+.env

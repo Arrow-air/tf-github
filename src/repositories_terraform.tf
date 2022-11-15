@@ -50,10 +50,11 @@ module "repository_tf" {
   description = format("Arrow Terraform - %s", each.value.description)
 
   # Settings with defaults
-  owner_team     = each.value.owner_team
-  visibility     = each.value.visibility
-  default_branch = each.value.default_branch
-  webhooks       = each.value.webhooks
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
   repository_files = merge(
     local.terraform_default.files,
