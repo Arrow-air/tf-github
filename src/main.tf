@@ -133,7 +133,7 @@ locals {
       webhooks       = try(local.webhooks["services"], {})
       repository_files = merge(
         local.rust_default.files,
-        { for file, path in local.rust_default.template_files :
+        { for file, path in local.rust_svc.template_files :
           file => {
             content = templatefile(path, {
               owner_team = "services"
