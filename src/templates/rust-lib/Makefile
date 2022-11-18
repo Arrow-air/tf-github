@@ -1,28 +1,12 @@
 ## DO NOT EDIT!
 # This file was provisioned by Terraform
-# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-all/Makefile.tftpl
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-lib/Makefile
 
-DOCKER_NAME          := arrow-${name}
-PACKAGE_NAME         := ${name}
-%{ if type == "lib" }
-PUBLISH_PACKAGE_NAME := ${name}
+include .make/env.mk
+export
 
 help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-commitlint .help-toml
 build: rust-build
-%{ else }
-PUBLISH_PACKAGE_NAME := ${name}-client-grpc
-DOCKER_PORT_REST     := 8000
-DOCKER_PORT_GRPC     := 50051
-HOST_PORT_REST       := ${port_rest}
-HOST_PORT_GRPC       := ${port_grpc}
-
-help: .help-base .help-rust .help-python .help-cspell .help-markdown .help-editorconfig .help-commitlint .help-toml .help-docker
-build: rust-build docker-build
-
-include .make/docker.mk
-%{ endif }
-export
-
 clean: rust-clean
 release: rust-release
 publish: rust-publish

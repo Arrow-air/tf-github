@@ -5,8 +5,14 @@
 #####################################################################
 locals {
   rust_lib = {
-    template_files = local.rust_default.template_files
-    files          = local.rust_default.files
+    template_files = merge(local.rust_default.template_files, {
+      ".env.base.tftpl" = "templates/rust-lib/.env.base.tftpl"
+      "Makefile"        = "templates/rust-lib/Makefile"
+    })
+    files = merge(
+      local.rust_default.files, {
+      },
+    )
 
     repos = {
       "router" = {
@@ -19,7 +25,10 @@ locals {
   }
 
   rust_svc = {
-    template_files = local.rust_default.template_files
+    template_files = merge(local.rust_default.template_files, {
+      ".env.base.tftpl" = "templates/rust-svc/.env.base.tftpl"
+      "Makefile"        = "templates/rust-svc/Makefile"
+    })
     files = merge(
       local.rust_default.files, {
         "Dockerfile" = {
@@ -65,13 +74,15 @@ locals {
 
   rust_default = {
     template_files = merge(local.template_files, {
-      "Makefile"   = "templates/rust-all/Makefile.tftpl"
       ".gitignore" = "templates/rust-all/.gitignore.tftpl"
     })
 
     files = merge(local.files, {
       ".make/docker.mk" = {
         content = file("templates/all/.make/docker.mk")
+      },
+      ".make/env.mk" = {
+        content = file("templates/all/.make/env.mk")
       },
       ".make/python.mk" = {
         content = file("templates/all/.make/python.mk")
