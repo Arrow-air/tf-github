@@ -6,8 +6,8 @@
 locals {
   rust_lib = {
     template_files = merge(local.rust_default.template_files, {
-      ".env.base.tftpl" = "templates/rust-lib/.env.base.tftpl"
-      "Makefile"        = "templates/rust-lib/Makefile"
+      ".env.base" = "templates/rust-lib/.env.base.tftpl"
+      "Makefile"  = "templates/rust-lib/Makefile"
     })
     files = merge(
       local.rust_default.files, {
@@ -26,8 +26,8 @@ locals {
 
   rust_svc = {
     template_files = merge(local.rust_default.template_files, {
-      ".env.base.tftpl" = "templates/rust-svc/.env.base.tftpl"
-      "Makefile"        = "templates/rust-svc/Makefile"
+      ".env.base" = "templates/rust-svc/.env.base.tftpl"
+      "Makefile"  = "templates/rust-svc/Makefile"
     })
     files = merge(
       local.rust_default.files, {
