@@ -147,12 +147,25 @@ locals {
       )
     }
     "atc-core" = {
-      description      = "Air Traffic Control Library for UAM Activities"
-      visibility       = "public"
-      owner_team       = "services"
-      default_branch   = "develop"
-      webhooks         = try(local.webhooks["services"], {})
-      repository_files = local.rust_default.files
+      description    = "Air Traffic Control Library for UAM Activities"
+      visibility     = "public"
+      owner_team     = "services"
+      default_branch = "develop"
+      webhooks       = try(local.webhooks["services"], {})
+      repository_files = merge(
+        local.rust_default.files,
+        { for file, path in local.rust_lib.template_files :
+          file => {
+            content = templatefile(path, {
+              owner_team = "services"
+              type       = "lib"
+              name       = "atc-core"
+              port_rest  = 3001
+              port_grpc  = ""
+            })
+          }
+        }
+      )
     }
     "cargo-gui-demo" = {
       description    = "GUI demo for the cargo application."
