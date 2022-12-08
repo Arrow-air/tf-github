@@ -52,6 +52,7 @@ rust-docker-pull:
 	@echo "  $(BOLD)rust-openapi$(SGR0)     -- Run 'cargo run -- --api ./out/$(PACKAGE_NAME)-openapi.json'."
 	@echo "  $(BOLD)rust-validate-openapi$(SGR0) -- Run validation on the ./out/$(PACKAGE_NAME)-openapi.json."
 	@echo "  $(BOLD)rust-grpc-api$(SGR0)    -- Generate a $(PACKAGE_NAME)-grpc-api.json from proto/*.proto files."
+	@echo "  $(BOLD)rust-coverage$(SGR0)    -- Run tarpaulin unit test coverage report"
 	@echo "  $(CYAN)Combined targets$(SGR0)"
 	@echo "  $(BOLD)rust-test-all$(SGR0)    -- Run targets: rust-build rust-check rust-test rust-clippy rust-fmt"
 	@echo "  $(BOLD)rust-all$(SGR0)         -- Run targets; rust-clean rust-test-all rust-release"
@@ -141,6 +142,21 @@ rust-grpc-api:
 		-v $(OUTPUTS_PATH):/out \
 		pseudomuto/protoc-gen-doc \
 		--doc_opt=json,$(PACKAGE_NAME)-grpc-api.json
+
+rust-coverage: check-cargo-registry rust-docker-pull
+	@echo "$(CYAN)Rebuilding and testing with profiling enabled...$(SGR0)"
+	@docker run \
+		--name=$(DOCKER_NAME)-$@ \
+		--rm \
+		--user `id -u`:`id -g` \
+		--workdir=/usr/src/app \
+		--security-opt seccomp=unconfined \
+		-v "$(SOURCE_PATH)/:/usr/src/app" \
+		-v "$(SOURCE_PATH)/.cargo/registry:/usr/local/cargo/registry" \
+		-e CARGO_INCREMENTAL=$(CARGO_INCREMENTAL) \
+		-e RUSTC_BOOTSTRAP=$(RUSTC_BOOTSTRAP) \
+		-t $(RUST_IMAGE_NAME):$(RUST_IMAGE_TAG) \
+		cargo tarpaulin --workspace -v --all-features --out Lcov
 
 rust-test-all: rust-build rust-check rust-test rust-clippy rust-fmt rust-doc
 rust-all: rust-clean rust-test-all rust-release
