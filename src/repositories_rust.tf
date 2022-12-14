@@ -125,6 +125,9 @@ locals {
       },
       ".github/workflows/sanity_checks.yml" = {
         content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
+      },
+      ".github/workflows/nightly.yml" = {
+        content = file("templates/rust-all/.github/workflows/nightly.yml")
       }
     })
 
