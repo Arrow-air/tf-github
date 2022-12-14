@@ -69,6 +69,9 @@ locals {
       "pricing" = {
         description = "Module for Pricing Flight Services"
       }
+      "devops-test" = {
+        description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
+      }
     }
   }
 
