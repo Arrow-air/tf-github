@@ -78,6 +78,7 @@ locals {
   rust_default = {
     template_files = merge(local.template_files, {
       ".gitignore" = "templates/rust-all/.gitignore.tftpl"
+      ".LICENSE"   = "templates/rust-all/LICENSE.tftpl"
     })
 
     files = merge(local.files, {
