@@ -65,9 +65,18 @@ locals {
       },
       "cargo" = {
         description = "Public Requests for Cargo Services"
-      }
+      },
       "pricing" = {
         description = "Module for Pricing Flight Services"
+      },
+      "compliance" = {
+        description = "Communication with external regulatory bodies."
+      },
+      "assets" = {
+        description = "Registration and management of network assets."
+      },
+      "telemetry" = {
+        description = "Receive and rebroadcast vehicle and vertiport telemetry."
       }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
