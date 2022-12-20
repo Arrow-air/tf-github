@@ -8,20 +8,48 @@ locals {
     repos = {
       "onboarding" = {
         description = "users and groups for resources manageable by Terraform"
-        visibility  = "private"
-        owner_team  = "devops"
+        files = merge(local.files, {
+          ".github/workflows/terraform.yml" = {
+            content = file("templates/tf-onboarding/.github/workflows/terraform.yml")
+          }
+        })
+        visibility = "private"
       }
       "github" = {
         description = "github resources"
+        files = merge(local.files, {
+          ".github/workflows/terraform.yml" = {
+            content = file("templates/tf-github/.github/workflows/terraform.yml")
+          }
+        })
+      }
+      "gcp-organization" = {
+        description = "GCP Organization management"
+      }
+      "gcp-projects" = {
+        description = "GCP Project management"
+      }
+      "gcp-network" = {
+        description = "GCP Network management"
       }
     }
   }
 
   terraform_default = {
     template_files = merge(local.template_files, {
+      "Makefile" = "templates/tf-all/Makefile"
     })
 
     files = merge(local.files, {
+      ".github/workflows/terraform.yml" = {
+        content = file("templates/tf-all/.github/workflows/terraform.yml")
+      }
+      ".gitignore" = {
+        content = file("templates/tf-all/.gitignore")
+      }
+      ".make/terraform.mk" = {
+        content = file("templates/all/.make/terraform.mk")
+      }
     })
 
     settings = {
