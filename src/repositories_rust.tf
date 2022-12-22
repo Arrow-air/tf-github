@@ -17,6 +17,9 @@ locals {
     repos = {
       "router" = {
         description = "Fleet Routing Algorithm Library"
+      },
+      "common" = {
+        description = "Common functions and data types for Arrow services."
       }
       #   "analytics" = {
       #     description = "Fleet Routing Analysis from Real or Simulated Artifacts"
