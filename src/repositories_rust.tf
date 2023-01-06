@@ -20,6 +20,9 @@ locals {
       },
       "common" = {
         description = "Common functions and data types for Arrow services."
+      },
+      "ccsds" = {
+        description = "CCSDS Space Packet Protocol in Rust."
       }
       #   "analytics" = {
       #     description = "Fleet Routing Analysis from Real or Simulated Artifacts"
