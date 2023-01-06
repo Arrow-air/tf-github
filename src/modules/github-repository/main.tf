@@ -189,7 +189,7 @@ resource "github_repository_file" "files" {
   content             = each.value.content
   overwrite_on_create = each.value.overwrite_on_create
 
-  commit_message = lower(format("chore(ci): %s - provisioned by terraform", each.key))
+  commit_message = "ci: terraform provisioned file changes\n\n[skip ci]"
 }
 
 ########################################################
