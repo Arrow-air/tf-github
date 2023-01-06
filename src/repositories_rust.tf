@@ -46,6 +46,12 @@ locals {
         ".github/workflows/release.yml" = {
           content = file("templates/rust-svc/.github/workflows/release.yml")
         },
+        ".github/workflows/autoupdate.yml" = {
+          content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
+        },
+        ".github/workflows/autosquash.yml" = {
+          content = file("templates/rust-svc/.github/workflows/autosquash.yml")
+        },
         ".github/workflows/api_docs.yml" = {
           content = file("templates/rust-svc/.github/workflows/api_docs.yml")
         },
@@ -139,9 +145,6 @@ locals {
       ".github/workflows/python_ci.yml" = {
         content = file("templates/rust-all/.github/workflows/python_ci.yml")
       },
-      ".github/workflows/pr_rebase.yml" = {
-        content = file("templates/rust-all/.github/workflows/pr_rebase.yml")
-      },
       ".github/workflows/sanity_checks.yml" = {
         content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
       },
@@ -151,11 +154,15 @@ locals {
     })
 
     settings = {
-      owner_team                         = "services"
-      visibility                         = "public"
-      default_branch                     = "develop"
-      webhooks                           = try(local.webhooks["services"], {})
-      default_branch_protection_settings = {} # Using module defaults
+      owner_team     = "services"
+      visibility     = "public"
+      default_branch = "develop"
+      webhooks       = try(local.webhooks["services"], {})
+      default_branch_protection_settings = {
+        required_pull_request_reviews = {
+          pull_request_bypassers = ["/arrow-github-bot"]
+        }
+      }
     }
   }
 }
