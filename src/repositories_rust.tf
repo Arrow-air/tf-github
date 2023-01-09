@@ -45,7 +45,10 @@ locals {
         },
         ".github/workflows/release.yml" = {
           content = file("templates/rust-svc/.github/workflows/release.yml")
-        }
+        },
+        ".github/workflows/api_docs.yml" = {
+          content = file("templates/rust-svc/.github/workflows/api_docs.yml")
+        },
       }
     )
 
