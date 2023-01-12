@@ -31,3 +31,5 @@ nuxt
 vertiport
 ccsds
 fileexists
+autosquash
+autoupdate
