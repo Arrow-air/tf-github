@@ -8,20 +8,20 @@ locals {
     repos = {
       "onboarding" = {
         description = "users and groups for resources manageable by Terraform"
-        files = merge(local.files, {
+        files = {
           ".github/workflows/terraform.yml" = {
             content = file("templates/tf-onboarding/.github/workflows/terraform.yml")
           }
-        })
+        }
         visibility = "private"
       }
       "github" = {
         description = "github resources"
-        files = merge(local.files, {
+        files = {
           ".github/workflows/terraform.yml" = {
             content = file("templates/tf-github/.github/workflows/terraform.yml")
           }
-        })
+        }
       }
       "gcp-organization" = {
         description = "GCP Organization management"
@@ -86,6 +86,7 @@ module "repository_tf" {
 
   repository_files = merge(
     local.terraform_default.files,
+    try(each.value.files, {}),
     { for file, path in local.terraform_default.template_files :
       file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("tf-%s", each.key) }) }
     }
