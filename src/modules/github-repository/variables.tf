@@ -132,6 +132,8 @@ variable "protected_branches" {
 variable "environments" {
   description = "Repository environments to be created."
   type = map(object({
+    branch  = string
+    secrets = optional(map(string), {})
     reviewers = optional(map(
       object({
         team = list(string)
@@ -140,7 +142,10 @@ variable "environments" {
     deployment_branch_policy = optional(object({
       protected_branches     = optional(bool, true)
       custom_branch_policies = optional(bool, true)
-    }))
+      }), {
+      protected_branches     = true,
+      custom_branch_policies = false,
+    })
   }))
 
   default = {}

@@ -154,31 +154,6 @@ resource "github_branch_protection" "all" {
 
 ########################################################
 #
-# Create environments
-#
-########################################################
-resource "github_repository_environment" "env" {
-  for_each = var.environments
-
-  environment = each.key
-  repository  = github_repository.repository.name
-
-  dynamic "reviewers" {
-    for_each = each.value.reviewers
-
-    content {
-      teams = data.github_team.reviewers[each.key].*.id
-    }
-  }
-
-  deployment_branch_policy {
-    protected_branches     = each.value.deployment_branch_policy.protected_branches
-    custom_branch_policies = each.value.deployment_branch_policy.custom_branch_policies
-  }
-}
-
-########################################################
-#
 # Provision Terraform initial repository file
 #
 ########################################################
