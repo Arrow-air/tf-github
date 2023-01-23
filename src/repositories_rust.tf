@@ -46,6 +46,9 @@ locals {
         ".github/workflows/release.yml" = {
           content = file("templates/rust-svc/.github/workflows/release.yml")
         },
+        ".github/workflows/post_release.yml" = {
+          content = file("templates/rust-svc/.github/workflows/post_release.yml")
+        },
         ".github/workflows/autoupdate.yml" = {
           content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
         },
@@ -95,6 +98,7 @@ locals {
       }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
+        webhooks    = {}
       }
     }
   }
