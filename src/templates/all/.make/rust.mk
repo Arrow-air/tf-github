@@ -10,6 +10,7 @@ RUSTC_BOOTSTRAP     ?= 0
 RELEASE_TARGET      ?= x86_64-unknown-linux-musl
 PUBLISH_DRY_RUN     ?= 1
 OUTPUTS_PATH        ?= $(SOURCE_PATH)/out
+ADDITIONAL_OPT      ?=
 
 # function with a generic template to run docker with the required values
 # Accepts $1 = command to run, $2 = additional command flags (optional)
@@ -21,6 +22,7 @@ cargo_run = docker run \
 	--rm \
 	--user `id -u`:`id -g` \
 	--workdir=/usr/src/app \
+	$(ADDITIONAL_OPT) \
 	-v "$(SOURCE_PATH)/:/usr/src/app" \
 	-v "$(SOURCE_PATH)/.cargo/registry:/usr/local/cargo/registry" \
 	-e CARGO_INCREMENTAL=$(CARGO_INCREMENTAL) \
@@ -143,20 +145,15 @@ rust-grpc-api:
 		pseudomuto/protoc-gen-doc \
 		--doc_opt=json,$(PACKAGE_NAME)-grpc-api.json
 
+rust-coverage: ADDITIONAL_OPT = --security-opt seccomp='unconfined'
 rust-coverage: check-cargo-registry rust-docker-pull
 	@echo "$(CYAN)Rebuilding and testing with profiling enabled...$(SGR0)"
-	@docker run \
-		--name=$(DOCKER_NAME)-$@ \
-		--rm \
-		--user `id -u`:`id -g` \
-		--workdir=/usr/src/app \
-		--security-opt seccomp=unconfined \
-		-v "$(SOURCE_PATH)/:/usr/src/app" \
-		-v "$(SOURCE_PATH)/.cargo/registry:/usr/local/cargo/registry" \
-		-e CARGO_INCREMENTAL=$(CARGO_INCREMENTAL) \
-		-e RUSTC_BOOTSTRAP=$(RUSTC_BOOTSTRAP) \
-		-t $(RUST_IMAGE_NAME):$(RUST_IMAGE_TAG) \
-		cargo tarpaulin --workspace -v --all-features --out Lcov
+	@mkdir -p coverage/
+	@$(call cargo_run,tarpaulin,\
+		--workspace -l --include-tests --tests --no-fail-fast \
+		--all-features --out Lcov \
+		--output-dir coverage/)
+	@sed -e "s/\/usr\/src\/app\///g" -i coverage/lcov.info
 
 rust-test-all: rust-build rust-check rust-test rust-clippy rust-fmt rust-doc
 rust-all: rust-clean rust-test-all rust-release
