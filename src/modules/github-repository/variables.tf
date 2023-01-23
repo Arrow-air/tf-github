@@ -37,6 +37,24 @@ variable "delete_branch_on_merge" {
   default     = true
 }
 
+variable "allow_merge_commit" {
+  description = "Set to false to disable merge commits on the repository"
+  type        = bool
+  default     = true
+}
+
+variable "allow_squash_merge" {
+  description = "Set to true to enable squash merges on the repository"
+  type        = bool
+  default     = false
+}
+
+variable "allow_rebase_merge" {
+  description = "Set to true to enable rebase merges on the repository"
+  type        = bool
+  default     = false
+}
+
 variable "template" {
   description = "Optional template to use for provisioning of the repository."
   type        = string
@@ -114,6 +132,8 @@ variable "protected_branches" {
 variable "environments" {
   description = "Repository environments to be created."
   type = map(object({
+    branch  = string
+    secrets = optional(map(string), {})
     reviewers = optional(map(
       object({
         team = list(string)
@@ -122,7 +142,10 @@ variable "environments" {
     deployment_branch_policy = optional(object({
       protected_branches     = optional(bool, true)
       custom_branch_policies = optional(bool, true)
-    }))
+      }), {
+      protected_branches     = true,
+      custom_branch_policies = false,
+    })
   }))
 
   default = {}

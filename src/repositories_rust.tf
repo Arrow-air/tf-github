@@ -31,6 +31,15 @@ locals {
   }
 
   rust_svc = {
+    environments = {
+      production = {
+        branch = "main"
+        secrets = {
+          "AWS_S3_PROCESS_FILES_BUCKET" = "arrow-prd-process-files"
+          "AWS_S3_PROCESS_FILES_ROLE"   = "prd-GitHubActionsDocs"
+        }
+      }
+    }
     template_files = merge(local.rust_default.template_files, {
       ".env.base" = "templates/rust-svc/.env.base.tftpl"
       "Makefile"  = "templates/rust-svc/Makefile"
@@ -45,6 +54,9 @@ locals {
         },
         ".github/workflows/release.yml" = {
           content = file("templates/rust-svc/.github/workflows/release.yml")
+        },
+        ".github/workflows/post_release.yml" = {
+          content = file("templates/rust-svc/.github/workflows/post_release.yml")
         },
         ".github/workflows/autoupdate.yml" = {
           content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
@@ -95,6 +107,7 @@ locals {
       }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
+        webhooks    = {}
       }
     }
   }
@@ -226,6 +239,8 @@ module "repository_rust_svc" {
       }
     }
   )
+
+  environments = local.rust_svc.environments
 
   # Settings with defaults
   owner_team            = each.value.owner_team

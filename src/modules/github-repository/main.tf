@@ -26,6 +26,9 @@ resource "github_repository" "repository" {
   visibility             = var.visibility
   is_template            = var.is_template
   delete_branch_on_merge = var.delete_branch_on_merge
+  allow_merge_commit     = var.allow_merge_commit
+  allow_squash_merge     = var.allow_squash_merge
+  allow_rebase_merge     = var.allow_rebase_merge
 
   auto_init            = true
   has_issues           = true
@@ -151,29 +154,19 @@ resource "github_branch_protection" "all" {
 
 ########################################################
 #
-# Create environments
+# Provision Terraform initial repository file
 #
 ########################################################
-resource "github_repository_environment" "env" {
-  for_each = var.environments
+resource "github_repository_file" "init" {
+  repository = github_repository.repository.name
+  branch     = github_branch_default.default.branch
 
-  environment = each.key
-  repository  = github_repository.repository.name
+  file                = ".terraform_init"
+  content             = format("DO NOT REMOVE\nThis repository is managed by Terraform and contains files that will be overwritten when changed\nThis file is part of the management of repository %s\n", github_repository.repository.name)
+  overwrite_on_create = "true"
 
-  dynamic "reviewers" {
-    for_each = each.value.reviewers
-
-    content {
-      teams = data.github_team.reviewers[each.key].*.id
-    }
-  }
-
-  deployment_branch_policy {
-    protected_branches     = each.value.deployment_branch_policy.protected_branches
-    custom_branch_policies = each.value.deployment_branch_policy.custom_branch_policies
-  }
+  commit_message = "ci: terraform provisioned file changes\n\n[skip ci]"
 }
-
 ########################################################
 #
 # Provision Terraform managed repository files
@@ -190,6 +183,7 @@ resource "github_repository_file" "files" {
   overwrite_on_create = each.value.overwrite_on_create
 
   commit_message = "fixup! ci: terraform provisioned file changes\n\n[skip ci]"
+  depends_on     = [github_repository_file.init]
 }
 
 ########################################################

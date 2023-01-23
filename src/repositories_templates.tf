@@ -202,4 +202,3 @@ module "repository_mod_template" {
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
-
