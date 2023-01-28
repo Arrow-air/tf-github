@@ -35,8 +35,8 @@ locals {
       production = {
         branch = "main"
         secrets = {
-          "AWS_S3_PROCESS_FILES_BUCKET" = "arrow-prd-process-files"
-          "AWS_S3_PROCESS_FILES_ROLE"   = "prd-GitHubActionsDocs"
+          "AWS_S3_SERVICES_DOCS_BUCKET" = "arrow-prd-services-docs"
+          "AWS_S3_SERVICES_DOCS_ROLE"   = "prd-GitHubActionsDocs"
         }
       }
     }
@@ -83,7 +83,19 @@ locals {
             },
             ".github/workflows/release.yml" = {
               content = file("templates/rust-svc/.github/workflows/release.yml")
-            }
+            },
+            ".github/workflows/post_release.yml" = {
+              content = file("templates/rust-svc/.github/workflows/post_release.yml")
+            },
+            ".github/workflows/autoupdate.yml" = {
+              content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
+            },
+            ".github/workflows/autosquash.yml" = {
+              content = file("templates/rust-svc/.github/workflows/autosquash.yml")
+            },
+            ".github/workflows/api_docs.yml" = {
+              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
+            },
           }
         )
       },
