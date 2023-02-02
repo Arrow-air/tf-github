@@ -54,7 +54,7 @@ locals {
     })
 
     settings = {
-      owner_team                         = "services"
+      owner_team                         = "webdevelopers"
       visibility                         = "public"
       default_branch                     = "develop"
       webhooks                           = try(local.webhooks["services"], {})
