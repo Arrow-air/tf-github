@@ -74,7 +74,7 @@ locals {
       "storage" = {
         description = "Storage module"
         # Override files list to provision with Terraform
-        # svc-storage handles it's own docker-compose.yml file
+        # svc-storage handles its own docker-compose.yml file
         # due to extra backend services needed
         files = merge(
           local.rust_default.files, {
@@ -116,6 +116,19 @@ locals {
       },
       "telemetry" = {
         description = "Receive and rebroadcast vehicle and vertiport telemetry."
+        # Override files list to provision with Terraform
+        # svc-telemetry handles its own docker-compose.yml file
+        # due to extra backend services needed
+        files = merge(
+          local.rust_default.files, {
+            "Dockerfile" = {
+              content = file("templates/rust-svc/Dockerfile")
+            },
+            ".github/workflows/release.yml" = {
+              content = file("templates/rust-svc/.github/workflows/release.yml")
+            }
+          }
+        )
       }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
