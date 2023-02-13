@@ -126,7 +126,19 @@ locals {
             },
             ".github/workflows/release.yml" = {
               content = file("templates/rust-svc/.github/workflows/release.yml")
-            }
+            },
+            ".github/workflows/post_release.yml" = {
+              content = file("templates/rust-svc/.github/workflows/post_release.yml")
+            },
+            ".github/workflows/autoupdate.yml" = {
+              content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
+            },
+            ".github/workflows/autosquash.yml" = {
+              content = file("templates/rust-svc/.github/workflows/autosquash.yml")
+            },
+            ".github/workflows/api_docs.yml" = {
+              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
+            },
           }
         )
       }
