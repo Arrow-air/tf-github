@@ -33,3 +33,4 @@ ccsds
 fileexists
 autosquash
 autoupdate
+itest
