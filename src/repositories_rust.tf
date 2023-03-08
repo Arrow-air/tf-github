@@ -24,9 +24,9 @@ locals {
       "ccsds" = {
         description = "CCSDS Space Packet Protocol in Rust."
       }
-      #   "analytics" = {
-      #     description = "Fleet Routing Analysis from Real or Simulated Artifacts"
-      #   }
+      "itest" = {
+        description = "Integration testing library for Arrow services."
+      }
     }
   }
 
