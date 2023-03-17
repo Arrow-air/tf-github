@@ -1,6 +1,6 @@
 ## DO NOT EDIT!
 # This file was provisioned by Terraform
-# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-all/.github/workflows/nightly.yml
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/stm32-all/.github/workflows/nightly.yml
 #
 on:
   schedule:
@@ -21,9 +21,9 @@ jobs:
         with:
           ref: develop
       - name: Build
-        run: make rust-build
+        run: make build
       - name: Test
-        run: make rust-test
+        run: make test
 
   # Check if any URLs no longer work
   md-test:
