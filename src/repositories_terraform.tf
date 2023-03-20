@@ -8,6 +8,7 @@ locals {
     repos = {
       "onboarding" = {
         description = "users and groups for resources manageable by Terraform"
+        project     = "onboarding"
         files = {
           ".github/workflows/terraform.yml" = {
             content = file("templates/tf-onboarding/.github/workflows/terraform.yml")
@@ -17,6 +18,7 @@ locals {
       }
       "github" = {
         description = "github resources"
+        project     = "github"
         files = {
           ".github/workflows/terraform.yml" = {
             content = file("templates/tf-github/.github/workflows/terraform.yml")
@@ -25,19 +27,28 @@ locals {
       }
       "gcp-organization" = {
         description = "GCP Organization management"
+        project     = "org"
       }
       "gcp-projects" = {
         description = "GCP Project management"
+        project     = "org"
       }
       "gcp-network" = {
         description = "GCP Network management"
+        project     = "network"
+      }
+      "gcp-services-app" = {
+        description = "GCP Services App infra management"
+        project     = "app"
+        owner_team  = "services"
       }
     }
   }
 
   terraform_default = {
     template_files = merge(local.template_files, {
-      "Makefile" = "templates/tf-all/Makefile"
+      ".env.base" = "templates/tf-all/.env.base.tftpl"
+      "Makefile"  = "templates/tf-all/Makefile"
     })
 
     files = merge(local.files, {
@@ -49,6 +60,9 @@ locals {
       }
       ".make/terraform.mk" = {
         content = file("templates/all/.make/terraform.mk")
+      }
+      ".make/env.mk" = {
+        content = file("templates/all/.make/env.mk")
       }
     })
 
@@ -88,7 +102,7 @@ module "repository_tf" {
     local.terraform_default.files,
     try(each.value.files, {}),
     { for file, path in local.terraform_default.template_files :
-      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("tf-%s", each.key) }) }
+      file => { content = templatefile(path, { owner_team = each.value.owner_team, name = format("tf-%s", each.key), project = each.value.project }) }
     }
   )
 
