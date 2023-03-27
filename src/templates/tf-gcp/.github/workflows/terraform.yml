@@ -1,8 +1,8 @@
 ## DO NOT EDIT!
 ## This file was provisioned by Terraform
-## File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/tf-all/.github/workflows/terraform.yml
+## File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/tf-gcp/.github/workflows/terraform.yml
 #
-name: "Terraform"
+name: "Run terraform for workspaces"
 
 on:
   push:
@@ -10,53 +10,89 @@ on:
       - main
   pull_request:
 
+env:
+  TERM: xterm
+
 jobs:
+  setup:
+    name: "Setup matrix variables"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - id: get_workspaces
+        run: echo "workspaces=$(cat .terraform_workspaces.json)" >> "$GITHUB_OUTPUT"
+    outputs:
+      workspaces: ${{ steps.get_workspaces.outputs.workspaces }}
+
   terraform:
     name: "Terraform"
     runs-on: ubuntu-latest
+    needs: setup
     permissions:
       issues: write
       pull-requests: write
       contents: read
-    defaults:
-      run:
-        working-directory: src
+      id-token: write
+    strategy:
+      matrix:
+        workspace: ${{fromJSON(needs.setup.outputs.workspaces)}}
     concurrency:
       group: terraform-${{ github.head_ref || 'main' }}
+    environment: ${{ matrix.workspace }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+      - name: Authenticate to Google Cloud
+        id: gcp-auth
+        uses: google-github-actions/auth@v1
         with:
-          cli_config_credentials_token: ${{ secrets.TF_CLOUD_TOKEN }}
-          terraform_version: 1.3.6
+          workload_identity_provider: 'projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/automation/providers/github-tf-gcp-organization'
+          service_account: 'github-actions@arw-${{ matrix.workspace }}-org.iam.gserviceaccount.com'
 
-      - name: Terraform Format
+      - name: Write vars file
+        run: echo "${{ secrets.AUTO_TF_VARS_BASE64 }}" | base64 -d >> src/local.auto.tfvars
+
+      - name: Terraform Check Format
         id: fmt
-        run: terraform fmt -check
+        run: make tf-fmt
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: make tf-init-${{ matrix.workspace }}
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
+        env:
+          TF_FLAGS: "-no-color"
+          TF_STDOUT: "validate.out"
+        run: |
+          make tf-validate-${{ matrix.workspace }}
+          echo "stdout<<EOF" >> $GITHUB_OUTPUT
+          cat $TF_STDOUT >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
+        env:
+          TF_FLAGS: "-no-color -lock=false -input=false"
         run: |
-          terraform plan -no-color -lock=false -input=false -out tf.plan
+          make tf-plan-${{ matrix.workspace }}
         continue-on-error: true
 
-      - name: Terraform Plan Show
+      - name: Terraform Plan Export
         id: planshow
         if: github.event_name == 'pull_request'
+        env:
+          TF_FLAGS: "-no-color"
+          TF_STDOUT: "plan.out"
         run: |
-          terraform show -no-color tf.plan
+          make tf-show-${{ matrix.workspace }}
+          echo "stdout<<EOF" >> $GITHUB_OUTPUT
+          cat $TF_STDOUT >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Add PR comment with plan output
         uses: actions/github-script@v6
@@ -122,6 +158,10 @@ jobs:
         if: steps.plan.outcome == 'failure' && !contains(github.event.head_commit.message, 'provisioned by terraform')
         run: exit 1
 
-      - name: Terraform Apply
+      - name: Terraform Plan & Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' && !contains(github.event.head_commit.message, 'provisioned by terraform')
-        run: terraform apply -auto-approve -input=false
+        env:
+          TF_FLAGS: "-no-color -input=false"
+        run: |
+          make tf-plan-${{ matrix.workspace }}
+          make tf-apply-${{ matrix.workspace }}
