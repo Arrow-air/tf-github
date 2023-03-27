@@ -1,6 +1,9 @@
 ## DO NOT EDIT!
 # This file was provisioned by Terraform
-# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/tf-all/Makefile
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/tf-gcp/Makefile
+
+include .make/env.mk
+export
 
 help: .help-base .help-cspell .help-markdown .help-editorconfig .help-tf
 
