@@ -105,6 +105,9 @@ locals {
       "cargo" = {
         description = "Public Requests for Cargo Services"
       },
+      "contact" = {
+        description = "Forward communications to external email and SMS services."
+      },
       "pricing" = {
         description = "Module for Pricing Flight Services"
       },
