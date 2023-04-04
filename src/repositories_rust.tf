@@ -108,6 +108,9 @@ locals {
       "contact" = {
         description = "Forward communications to external email and SMS services."
       },
+      "docs" = {
+        description = "Generate and manage external and internal documents."
+      },
       "pricing" = {
         description = "Module for Pricing Flight Services"
       },
