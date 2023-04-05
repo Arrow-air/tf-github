@@ -11,16 +11,19 @@ locals {
     })
     files = merge(
       local.rust_default.files, {
-      },
+        ".github/workflows/post_release.yml" = {
+          content = file("templates/rust-lib/.github/workflows/post_release.yml")
+        }
+      }
     )
 
     repos = {
       "router" = {
         description = "Fleet Routing Algorithm Library"
-      },
+      }
       "common" = {
         description = "Common functions and data types for Arrow services."
-      },
+      }
       "ccsds" = {
         description = "CCSDS Space Packet Protocol in Rust."
       }
@@ -48,25 +51,16 @@ locals {
       local.rust_default.files, {
         "Dockerfile" = {
           content = file("templates/rust-svc/Dockerfile")
-        },
+        }
         "docker-compose.yml" = {
           content = file("templates/rust-svc/docker-compose.yml")
-        },
-        ".github/workflows/release.yml" = {
-          content = file("templates/rust-svc/.github/workflows/release.yml")
-        },
+        }
         ".github/workflows/post_release.yml" = {
           content = file("templates/rust-svc/.github/workflows/post_release.yml")
-        },
-        ".github/workflows/autoupdate.yml" = {
-          content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
-        },
-        ".github/workflows/autosquash.yml" = {
-          content = file("templates/rust-svc/.github/workflows/autosquash.yml")
-        },
+        }
         ".github/workflows/api_docs.yml" = {
           content = file("templates/rust-svc/.github/workflows/api_docs.yml")
-        },
+        }
       }
     )
 
@@ -80,46 +74,43 @@ locals {
           local.rust_default.files, {
             "Dockerfile" = {
               content = file("templates/rust-svc/Dockerfile")
-            },
+            }
+            ".github/workflows/autosquash.yml" = {
+              content = file("templates/rust-all/.github/workflows/autosquash.yml")
+            }
             ".github/workflows/release.yml" = {
-              content = file("templates/rust-svc/.github/workflows/release.yml")
-            },
+              content = file("templates/rust-all/.github/workflows/release.yml")
+            }
             ".github/workflows/post_release.yml" = {
               content = file("templates/rust-svc/.github/workflows/post_release.yml")
-            },
-            ".github/workflows/autoupdate.yml" = {
-              content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
-            },
-            ".github/workflows/autosquash.yml" = {
-              content = file("templates/rust-svc/.github/workflows/autosquash.yml")
-            },
+            }
             ".github/workflows/api_docs.yml" = {
               content = file("templates/rust-svc/.github/workflows/api_docs.yml")
-            },
+            }
           }
         )
-      },
+      }
       "scheduler" = {
         description = "Fleet Routing and Flight Planner"
-      },
+      }
       "cargo" = {
         description = "Public Requests for Cargo Services"
-      },
+      }
       "contact" = {
         description = "Forward communications to external email and SMS services."
-      },
+      }
       "docs" = {
         description = "Generate and manage external and internal documents."
-      },
+      }
       "pricing" = {
         description = "Module for Pricing Flight Services"
-      },
+      }
       "compliance" = {
         description = "Communication with external regulatory bodies."
-      },
+      }
       "assets" = {
         description = "Registration and management of network assets."
-      },
+      }
       "telemetry" = {
         description = "Receive and rebroadcast vehicle and vertiport telemetry."
         # Override files list to provision with Terraform
@@ -129,22 +120,19 @@ locals {
           local.rust_default.files, {
             "Dockerfile" = {
               content = file("templates/rust-svc/Dockerfile")
-            },
+            }
+            ".github/workflows/autosquash.yml" = {
+              content = file("templates/rust-all/.github/workflows/autosquash.yml")
+            }
             ".github/workflows/release.yml" = {
-              content = file("templates/rust-svc/.github/workflows/release.yml")
-            },
+              content = file("templates/rust-all/.github/workflows/release.yml")
+            }
             ".github/workflows/post_release.yml" = {
               content = file("templates/rust-svc/.github/workflows/post_release.yml")
             },
-            ".github/workflows/autoupdate.yml" = {
-              content = file("templates/rust-svc/.github/workflows/autoupdate.yml")
-            },
-            ".github/workflows/autosquash.yml" = {
-              content = file("templates/rust-svc/.github/workflows/autosquash.yml")
-            },
             ".github/workflows/api_docs.yml" = {
               content = file("templates/rust-svc/.github/workflows/api_docs.yml")
-            },
+            }
           }
         )
       }
@@ -164,48 +152,54 @@ locals {
     files = merge(local.files, {
       ".make/docker.mk" = {
         content = file("templates/all/.make/docker.mk")
-      },
+      }
       ".make/env.mk" = {
         content = file("templates/all/.make/env.mk")
-      },
+      }
       ".make/python.mk" = {
         content = file("templates/all/.make/python.mk")
-      },
+      }
       ".make/rust.mk" = {
         content = file("templates/all/.make/rust.mk")
-      },
+      }
       ".make/toml.mk" = {
         content = file("templates/all/.make/toml.mk")
-      },
+      }
       ".taplo.toml" = {
         content = file("templates/rust-all/.taplo.toml")
-      },
+      }
       ".cargo/config.toml" = {
         content = file("templates/rust-all/.cargo/config.toml")
-      },
+      }
       ".cargo-husky/hooks/pre-commit" = {
         content = file("templates/rust-all/.cargo-husky/hooks/pre-commit")
-      },
+      }
       ".cargo-husky/hooks/pre-push" = {
         content = file("templates/rust-all/.cargo-husky/hooks/pre-push")
-      },
+      }
       ".cargo-husky/hooks/commit-msg" = {
         content = file("templates/rust-all/.cargo-husky/hooks/commit-msg")
-      },
+      }
       ".cargo-husky/hooks/README.md" = {
         content = file("templates/rust-all/.cargo-husky/hooks/README.md")
-      },
+      }
       ".github/workflows/rust_ci.yml" = {
         content = file("templates/rust-all/.github/workflows/rust_ci.yml")
-      },
+      }
       ".github/workflows/python_ci.yml" = {
         content = file("templates/rust-all/.github/workflows/python_ci.yml")
-      },
+      }
       ".github/workflows/sanity_checks.yml" = {
         content = file("templates/rust-all/.github/workflows/sanity_checks.yml")
-      },
+      }
       ".github/workflows/nightly.yml" = {
         content = file("templates/rust-all/.github/workflows/nightly.yml")
+      }
+      ".github/workflows/release.yml" = {
+        content = file("templates/rust-all/.github/workflows/release.yml")
+      }
+      ".github/workflows/autosquash.yml" = {
+        content = file("templates/rust-all/.github/workflows/autosquash.yml")
       }
     })
 
@@ -217,6 +211,13 @@ locals {
       default_branch_protection_settings = {
         required_pull_request_reviews = {
           pull_request_bypassers = ["/arrow-github-bot"]
+        }
+      }
+      protected_branches = {
+        "main" = {
+          required_pull_request_reviews = {
+            pull_request_bypassers = ["/arrow-github-bot"]
+          }
         }
       }
     }
@@ -256,6 +257,7 @@ module "repository_rust_lib" {
   terraform_app_node_id = local.arrow_release_automation_node_id
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
+  protected_branches                 = each.value.protected_branches
 }
 
 ########################################################
@@ -293,4 +295,5 @@ module "repository_rust_svc" {
   terraform_app_node_id = local.arrow_release_automation_node_id
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
+  protected_branches                 = each.value.protected_branches
 }
