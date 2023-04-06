@@ -25,6 +25,9 @@ locals {
       "cargo-shipper" = {
         description = "Cargo Shipper"
       }
+      "services-hangar" = {
+        description = "Asset management and administration UI"
+      }
       "services-public" = {
         description = "Services landing page"
       }
