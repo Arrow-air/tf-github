@@ -9,6 +9,17 @@ locals {
       }
     }
   ]...)
+
+  # generate list of variables to be created per environment
+  environment_variables = merge([
+    for environment, settings in var.environments : {
+      for variable, value in settings.variables : format("%s|%s", environment, variable) => {
+        environment   = environment
+        variable_name = variable
+        value         = value
+      }
+    }
+  ]...)
 }
 
 
@@ -44,4 +55,13 @@ resource "github_actions_environment_secret" "environment_secret" {
   environment     = github_repository_environment.env[each.value.environment].environment
   secret_name     = each.value.secret_name
   plaintext_value = each.value.plaintext_value
+}
+
+resource "github_actions_environment_variable" "environment_variable" {
+  for_each = local.environment_variables
+
+  repository    = github_repository.repository.name
+  environment   = github_repository_environment.env[each.value.environment].environment
+  variable_name = each.value.variable_name
+  value         = each.value.value
 }

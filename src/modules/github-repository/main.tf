@@ -35,6 +35,7 @@ resource "github_repository" "repository" {
   has_projects         = true
   has_wiki             = true
   vulnerability_alerts = true
+  archive_on_destroy   = true
 
   dynamic "template" {
     for_each = var.template == null ? [] : [var.template]
@@ -76,6 +77,14 @@ resource "github_repository" "repository" {
       }
     }
   }
+}
+
+resource "github_actions_variable" "map" {
+  for_each = var.variables
+
+  repository    = github_repository.repository.name
+  variable_name = each.key
+  value         = each.value
 }
 
 ########################################################

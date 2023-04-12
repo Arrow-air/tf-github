@@ -1,6 +1,6 @@
 ## DO NOT EDIT!
 # This file was provisioned by Terraform
-# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/nuxt-all/.github/workflows/sanity_checks.yml
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/rust-all/.github/workflows/sanity_checks.yml
 
 name: Sanity checks
 
@@ -9,6 +9,9 @@ env:
 
 on:
   pull_request:
+    branches:
+      - develop
+      - main
 
 jobs:
   codestyle:

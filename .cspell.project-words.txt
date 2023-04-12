@@ -36,3 +36,6 @@ autoupdate
 itest
 autopep
 pycodestyle
+flyarrow
+E134L2OOWNMG4H
+EVMCVI5OJORTD

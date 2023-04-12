@@ -1,0 +1,19 @@
+## DO NOT EDIT!
+# This file was provisioned by Terraform
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/nuxt-web/.github/workflows/deploy-dmo.yml
+
+name: Deploy Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    uses: ./.github/workflows/build-and-deploy.yml
+    with:
+      node-version: 19.x
+      environment: demo
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read

@@ -1,0 +1,33 @@
+## DO NOT EDIT!
+# This file was provisioned by Terraform
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/nuxt-web/.github/workflows/deploy-stg.yml
+
+name: Deploy Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    uses: ./.github/workflows/build-and-deploy.yml
+    with:
+      node-version: 19.x
+      environment: staging
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+
+  invalidate-cloudfront:
+    uses: ./.github/workflows/invalidate-cloudfront.yml
+    needs: [build-and-deploy]
+    with:
+      paths: "/*"
+      environment: staging
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
