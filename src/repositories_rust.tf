@@ -111,6 +111,9 @@ locals {
       "assets" = {
         description = "Registration and management of network assets."
       }
+      "atc" = {
+        description = "Automated air traffic control for integrated airspace."
+      }
       "telemetry" = {
         description = "Receive and rebroadcast vehicle and vertiport telemetry."
         # Override files list to provision with Terraform
