@@ -102,6 +102,9 @@ locals {
       "docs" = {
         description = "Generate and manage external and internal documents."
       }
+      "discovery" = {
+        description = "Coordination with other service providers and U-space."
+      }
       "pricing" = {
         description = "Module for Pricing Flight Services"
       }
