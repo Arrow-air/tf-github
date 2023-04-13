@@ -4,6 +4,9 @@
 
 DOCKER_NAME := arrow-${name}
 
+include .make/env.mk
+export
+
 help: .help-base .help-cspell .help-markdown .help-editorconfig .help-tf
 
 include .make/base.mk
