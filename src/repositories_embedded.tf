@@ -35,7 +35,10 @@ locals {
       },
       ".make/st.mk" = {
         content = file("templates/stm32-all/.make/st.mk")
-      }
+      },
+      "LICENSE" = {
+        content = file("templates/stm32-all/LICENSE")
+      },
     })
 
     repos = {
