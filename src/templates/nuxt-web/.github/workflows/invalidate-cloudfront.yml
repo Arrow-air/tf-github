@@ -1,0 +1,36 @@
+## DO NOT EDIT!
+# This file was provisioned by Terraform
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/nuxt-web/.github/workflows/invalidate-cloudfront.yml
+
+name: Create cloudfront invalidation
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+        description: "Environment to deploy to"
+      paths:
+        required: true
+        type: string
+        description: "Paths to invalidate"
+
+jobs:
+  aws-cloudfront:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: "arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/${{ vars.ENVIRONMENT_ABBR }}-GitHubActionsWebsite"
+          role-session-name: "github-actions-${{ github.event.repository.name }}-cf-invalidate"
+          aws-region: "${{ vars.AWS_REGION }}"
+      - name: Create Invalidation
+        run: |
+          aws cloudfront create-invalidation --distribution-id "${{ vars.AWS_CLOUDFRONT_DISTRIBUTION }}" --paths "${{ inputs.paths }}"

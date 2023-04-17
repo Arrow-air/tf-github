@@ -6,6 +6,10 @@
 locals {
   # Repositories needed for shared Terraform Modules can be listed here
   tf_mod = {
+    template_files = {
+      ".env.base" = "templates/tf-mod/.env.base.tftpl"
+    }
+
     files = local.terraform_default.files
 
     # Using Terraform naming convention for modules
@@ -20,15 +24,11 @@ locals {
   tf_gcp = {
     template_files = {
       ".env.base" = "templates/tf-gcp/.env.base.tftpl"
-      "Makefile"  = "templates/tf-gcp/Makefile"
     }
 
     files = {
       ".github/workflows/terraform.yml" = {
         content = file("templates/tf-gcp/.github/workflows/terraform.yml")
-      }
-      ".make/env.mk" = {
-        content = file("templates/all/.make/env.mk")
       }
     }
 
@@ -88,6 +88,9 @@ locals {
       }
       ".make/terraform.mk" = {
         content = file("templates/all/.make/terraform.mk")
+      }
+      ".make/env.mk" = {
+        content = file("templates/all/.make/env.mk")
       }
     })
 

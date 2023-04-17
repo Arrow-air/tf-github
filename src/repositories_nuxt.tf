@@ -18,18 +18,94 @@ locals {
     template_files = local.nuxt_default.template_files
     files = merge(
       local.nuxt_default.files, {
+        ".github/workflows/build-and-deploy.yml" = {
+          content = file("templates/nuxt-web/.github/workflows/build-and-deploy.yml")
+        }
+        ".github/workflows/deploy-dmo.yml" = {
+          content = file("templates/nuxt-web/.github/workflows/deploy-dmo.yml")
+        }
+        ".github/workflows/deploy-prd.yml" = {
+          content = file("templates/nuxt-web/.github/workflows/deploy-prd.yml")
+        }
+        ".github/workflows/deploy-stg.yml" = {
+          content = file("templates/nuxt-web/.github/workflows/deploy-stg.yml")
+        }
+        ".github/workflows/invalidate-cloudfront.yml" = {
+          content = file("templates/nuxt-web/.github/workflows/invalidate-cloudfront.yml")
+        }
       }
     )
 
     repos = {
       "cargo-shipper" = {
         description = "Cargo Shipper"
+        variables = {
+          "AWS_REGION" = "us-east-1"
+          "DOMAIN"     = "flyarrow.io"
+          "APP"        = "cargo"
+        }
+        environments = {
+          production = {
+            branch = "main"
+            variables = {
+              "ENVIRONMENT_ABBR"            = "prd"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "E134L2OOWNMG4H"
+            }
+          }
+          staging = {
+            branch = "staging"
+            variables = {
+              "ENVIRONMENT_ABBR"            = "stg"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "EVMCVI5OJORTD"
+            }
+          }
+          demo = {
+            variables = {
+              "ENVIRONMENT_ABBR" = "dmo"
+            }
+          }
+          dev = {
+            variables = {
+              "ENVIRONMENT_ABBR" = "dev"
+            }
+          }
+        }
       }
       "services-hangar" = {
         description = "Asset management and administration UI"
       }
       "services-public" = {
         description = "Services landing page"
+        variables = {
+          "AWS_REGION" = "us-east-1"
+          "DOMAIN"     = "flyarrow.io"
+          "APP"        = "website"
+        }
+        environments = {
+          production = {
+            branch = "main"
+            variables = {
+              "ENVIRONMENT_ABBR"            = "prd"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "E134L2OOWNMG4H"
+            }
+          }
+          staging = {
+            branch = "staging"
+            variables = {
+              "ENVIRONMENT_ABBR" = "stg"
+            }
+          }
+          demo = {
+            variables = {
+              "ENVIRONMENT_ABBR" = "dmo"
+            }
+          }
+          dev = {
+            variables = {
+              "ENVIRONMENT_ABBR" = "dev"
+            }
+          }
+        }
       }
     }
   }
@@ -44,13 +120,10 @@ locals {
       }
       ".husky/pre-commit" = {
         content = file("templates/nuxt-all/.husky/pre-commit")
-      },
+      }
       ".husky/commit-msg" = {
         content = file("templates/nuxt-all/.husky/commit-msg")
-      },
-      #".github/workflows/nuxt_ci.yml" = {
-      # content = file("templates/nuxt-all/.github/workflows/nuxt_ci.yml")
-      #},
+      }
       ".github/workflows/sanity_checks.yml" = {
         content = file("templates/nuxt-all/.github/workflows/sanity_checks.yml")
       }
@@ -122,12 +195,15 @@ module "repository_nuxt_web" {
     }
   )
 
-  # Settings with defaults
-  owner_team            = each.value.owner_team
-  visibility            = each.value.visibility
-  default_branch        = each.value.default_branch
-  webhooks              = each.value.webhooks
-  terraform_app_node_id = local.arrow_release_automation_node_id
 
+  # Settings with defaults
+  owner_team     = each.value.owner_team
+  visibility     = each.value.visibility
+  default_branch = each.value.default_branch
+  webhooks       = each.value.webhooks
+  variables      = try(each.value.variables, {})
+  environments   = try(each.value.environments, {})
+
+  terraform_app_node_id              = local.arrow_release_automation_node_id
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }

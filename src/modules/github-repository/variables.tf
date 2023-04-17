@@ -129,11 +129,18 @@ variable "protected_branches" {
   }
 }
 
+variable "variables" {
+  description = "Repository variables to be created."
+  type        = map(string)
+  default     = {}
+}
+
 variable "environments" {
   description = "Repository environments to be created."
   type = map(object({
-    branch  = string
-    secrets = optional(map(string), {})
+    branch    = optional(string, null)
+    secrets   = optional(map(string), {})
+    variables = optional(map(string), {})
     reviewers = optional(map(
       object({
         team = list(string)

@@ -1,0 +1,53 @@
+## DO NOT EDIT!
+# This file was provisioned by Terraform
+# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/nuxt-web/.github/workflows/build-and-deploy.yml
+
+name: Build and deploy
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+        description: "The node version to use for node setup"
+      environment:
+        required: true
+        type: string
+        description: "Environment to deploy to"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_S3_BUCKET: s3-${{ vars.ENVIRONMENT_ABBR }}-${{ vars.APP }}.${{ vars.DOMAIN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up node ${{ inputs.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: "arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/${{ vars.ENVIRONMENT_ABBR }}-GitHubActionsWebsite"
+          role-session-name: "github-actions-${{ github.event.repository.name }}-deploy"
+          aws-region: "${{ vars.AWS_REGION }}"
+      - name: Build
+        run: yarn generate
+      - name: Deploy to ${{ inputs.environment }} S3
+        id: sync_s3
+        run: |
+          aws s3 sync "./dist/img/" "s3://${{ env.AWS_S3_BUCKET }}/img/" --delete --size-only
+          aws s3 sync "./dist/" "s3://${{ env.AWS_S3_BUCKET }}/" --exclude "./dist/img"
+    outputs:
+      files_changed: "${{ steps.build-and-deploy.outputs.files_changed }}"
