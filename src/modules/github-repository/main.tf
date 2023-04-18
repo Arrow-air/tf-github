@@ -47,33 +47,20 @@ resource "github_repository" "repository" {
   }
 
   # TODO: Allow configuration override
-  security_and_analysis {
-    dynamic "advanced_security" {
-      # If a repository's visibility is public, advanced security is always enabled and cannot be changed, so this setting cannot be supplied.
-      for_each = var.visibility == "public" ? [] : ["disabled"]
+  dynamic "security_and_analysis" {
+    # We can only enable this if the repository's visibility is public
+    for_each = var.visibility == "public" ? ["enabled"] : []
 
-      content {
-        status = advanced_security.value
+    content {
+      secret_scanning {
+        status = "enabled"
       }
-    }
 
-    dynamic "secret_scanning" {
-      # We can only enable this if the repository's visibility is public
-      for_each = var.visibility == "public" ? ["enabled"] : ["disabled"]
-
-      content {
-        status = secret_scanning.value
-      }
-    }
-
-    dynamic "secret_scanning_push_protection" {
-      # We can only enable this if the repository's visibility is public
-      # BUG: setting it to "enabled" doesn't seem to work, each plan tries to set it from "disabled" to "enabled" again.
-      # Keep it disabled for now
-      for_each = var.visibility == "public" ? ["disabled"] : ["disabled"]
-
-      content {
-        status = secret_scanning_push_protection.value
+      secret_scanning_push_protection {
+        # We can only enable this if the repository's visibility is public
+        # BUG: setting it to "enabled" doesn't seem to work, each plan tries to set it from "disabled" to "enabled" again.
+        # Keep it disabled for now
+        status = "disabled"
       }
     }
   }
