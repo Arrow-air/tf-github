@@ -23,6 +23,9 @@ locals {
       }
       "common" = {
         description = "Common functions and data types for Arrow services."
+        variables = {
+          "RELEASE_COMMIT_FILES" = ".terraform_init lib/Cargo.toml arrow-macros/**/Cargo.toml CHANGELOG.md"
+        }
       }
       "ccsds" = {
         description = "CCSDS Space Packet Protocol in Rust."
@@ -42,6 +45,9 @@ locals {
           "AWS_S3_SERVICES_DOCS_ROLE"   = "prd-GitHubActionsDocs"
         }
       }
+    }
+    variables = {
+      "RELEASE_COMMIT_FILES" = ".terraform_init Cargo.lock client-*/Cargo.toml server/Cargo.toml CHANGELOG.md"
     }
     template_files = merge(local.rust_default.template_files, {
       ".env.base" = "templates/rust-svc/.env.base.tftpl"
@@ -255,6 +261,8 @@ module "repository_rust_lib" {
     }
   )
 
+  variables = merge(local.rust_svc.variables, try(each.value.variables, {}))
+
   # Settings with defaults
   owner_team            = each.value.owner_team
   visibility            = each.value.visibility
@@ -292,6 +300,7 @@ module "repository_rust_svc" {
   )
 
   environments = local.rust_svc.environments
+  variables    = merge(local.rust_svc.variables, try(each.value.variables, {}))
 
   # Settings with defaults
   owner_team            = each.value.owner_team
