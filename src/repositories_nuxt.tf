@@ -118,6 +118,9 @@ locals {
       ".gitignore" = {
         content = file("templates/nuxt-all/.gitignore")
       }
+      ".prettierrc.yaml" = {
+        content = file("templates/nuxt-all/.prettierrc.yaml")
+      }
       ".husky/pre-commit" = {
         content = file("templates/nuxt-all/.husky/pre-commit")
       }

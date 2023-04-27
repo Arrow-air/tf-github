@@ -1,0 +1,12 @@
+editorconfig: true
+overrides:
+  - files: "**/*.vue"
+    options:
+      parser: vue
+      vueIndentScriptAndStyle: true
+  - files:
+      - "**/*.scss"
+      - "**/*.css"
+      - "**/*.js"
+    options:
+      singleQuote: true
