@@ -6,8 +6,11 @@
 locals {
   # Repositories needed for shared Nuxt Components can be listed here
   nuxt_mod = {
-    template_files = local.nuxt_default.template_files
-    files          = local.nuxt_default.files
+    template_files = merge(local.nuxt_default.template_files, {
+      "Makefile" = "templates/nuxt-all/Makefile"
+    })
+
+    files = local.nuxt_default.files
 
     repos = {
     }
@@ -15,7 +18,9 @@ locals {
 
   # Repositories needed for our Web Applications can be listed here
   nuxt_web = {
-    template_files = local.nuxt_default.template_files
+    template_files = merge(local.nuxt_default.template_files, {
+      "Makefile" = "templates/nuxt-all/Makefile"
+    })
     files = merge(
       local.nuxt_default.files, {
         ".github/workflows/build-and-deploy.yml" = {
