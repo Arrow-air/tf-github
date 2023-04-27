@@ -130,6 +130,9 @@ locals {
       ".github/workflows/sanity_checks.yml" = {
         content = file("templates/nuxt-all/.github/workflows/sanity_checks.yml")
       }
+      ".github/workflows/autosquash.yml" = {
+        content = file("templates/nuxt-all/.github/workflows/autosquash.yml")
+      }
     })
 
     settings = {
