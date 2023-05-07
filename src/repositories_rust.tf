@@ -148,6 +148,31 @@ locals {
           }
         )
       }
+      "gis" = {
+        description = "Gateway to the Airspace Geoinformation Database"
+        # Override files list to provision with Terraform
+        # svc-gis handles its own docker-compose.yml file
+        # due to extra backend services needed (PostGIS)
+        files = merge(
+          local.rust_default.files, {
+            "Dockerfile" = {
+              content = file("templates/rust-svc/Dockerfile")
+            }
+            ".github/workflows/autosquash.yml" = {
+              content = file("templates/rust-all/.github/workflows/autosquash.yml")
+            }
+            ".github/workflows/release.yml" = {
+              content = file("templates/rust-all/.github/workflows/release.yml")
+            }
+            ".github/workflows/post_release.yml" = {
+              content = file("templates/rust-svc/.github/workflows/post_release.yml")
+            }
+            ".github/workflows/api_docs.yml" = {
+              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
+            }
+          }
+        )
+      }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
         webhooks    = {}
