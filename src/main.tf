@@ -62,6 +62,16 @@ locals {
   }
 
   repos = {
+    "HearHear" = {
+      description = "Backend for HearHear Discord bot."
+      visibility  = "public"
+      owner_team  = "services"
+    }
+    "HearHear-Webapp" = {
+      description = "Frontend for HearHear."
+      visibility  = "public"
+      owner_team  = "services"
+    }
     "website" = {
       default_branch = "staging"
       description    = "Arrowair website and documentation with Docusaurus"
