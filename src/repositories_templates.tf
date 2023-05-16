@@ -19,6 +19,7 @@ locals {
     repos = {
       "rust" = {
         files          = local.rust_svc.files
+        variables      = local.rust_svc.variables
         template_files = local.rust_svc.template_files
         description    = "Rust services"
       }
@@ -146,6 +147,8 @@ module "repository_svc_template" {
         }
     ) } }
   )
+
+  variables = try(each.value.variables, {})
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
