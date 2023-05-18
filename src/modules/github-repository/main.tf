@@ -36,6 +36,7 @@ resource "github_repository" "repository" {
   has_wiki             = true
   vulnerability_alerts = true
   archive_on_destroy   = true
+  archived             = var.archived
 
   dynamic "template" {
     for_each = var.template == null ? [] : [var.template]
