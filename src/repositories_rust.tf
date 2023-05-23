@@ -117,6 +117,29 @@ locals {
       }
       "compliance" = {
         description = "Communication with external regulatory bodies."
+        # Override files list to provision with Terraform
+        # svc-compliance handles its own post_release file
+        # due to region specific docker builds
+        files = merge(
+          local.rust_default.files, {
+            "Dockerfile" = {
+              content = file("templates/rust-svc/Dockerfile")
+            }
+            "docker-compose.yml" = {
+              content = file("templates/rust-svc/docker-compose.yml")
+            }
+            ".github/workflows/autosquash.yml" = {
+              content = file("templates/rust-all/.github/workflows/autosquash.yml")
+            }
+            ".github/workflows/release.yml" = {
+              content = file("templates/rust-all/.github/workflows/release.yml")
+            }
+            ".github/workflows/api_docs.yml" = {
+              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
+            }
+          }
+        )
+
       }
       "assets" = {
         description = "Registration and management of network assets."
