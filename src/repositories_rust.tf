@@ -59,6 +59,9 @@ locals {
         "Dockerfile" = {
           content = file("templates/rust-svc/Dockerfile")
         }
+        ".dockerignore" = {
+          content = file("templates/rust-svc/.dockerignore")
+        }
         "docker-compose.yml" = {
           content = file("templates/rust-svc/docker-compose.yml")
         }
@@ -81,6 +84,9 @@ locals {
           local.rust_default.files, {
             "Dockerfile" = {
               content = file("templates/rust-svc/Dockerfile")
+            }
+            ".dockerignore" = {
+              content = file("templates/rust-svc/.dockerignore")
             }
             ".github/workflows/autosquash.yml" = {
               content = file("templates/rust-all/.github/workflows/autosquash.yml")
@@ -125,6 +131,9 @@ locals {
             "Dockerfile" = {
               content = file("templates/rust-svc/Dockerfile")
             }
+            ".dockerignore" = {
+              content = file("templates/rust-svc/.dockerignore")
+            }
             "docker-compose.yml" = {
               content = file("templates/rust-svc/docker-compose.yml")
             }
@@ -157,6 +166,9 @@ locals {
             "Dockerfile" = {
               content = file("templates/rust-svc/Dockerfile")
             }
+            ".dockerignore" = {
+              content = file("templates/rust-svc/.dockerignore")
+            }
             ".github/workflows/autosquash.yml" = {
               content = file("templates/rust-all/.github/workflows/autosquash.yml")
             }
@@ -181,6 +193,9 @@ locals {
           local.rust_default.files, {
             "Dockerfile" = {
               content = file("templates/rust-svc/Dockerfile")
+            }
+            ".dockerignore" = {
+              content = file("templates/rust-svc/.dockerignore")
             }
             ".github/workflows/autosquash.yml" = {
               content = file("templates/rust-all/.github/workflows/autosquash.yml")
