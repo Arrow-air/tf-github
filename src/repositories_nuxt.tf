@@ -112,6 +112,9 @@ locals {
           }
         }
       }
+      "services-scanner" = {
+        description = "Tag Scanner for Parcel & Customer Tracking"
+      }
     }
   }
 
