@@ -21,6 +21,9 @@ locals {
       ".gitignore" = {
         content = file("templates/stm32-all/.gitignore")
       },
+      ".editorconfig" = {
+        content = file("templates/stm32-all/.editorconfig")
+      },
       ".github/workflows/release.yml" = {
         content = file("templates/stm32-all/.github/workflows/release.yml")
       },
