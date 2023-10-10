@@ -31,9 +31,6 @@ locals {
       "ccsds" = {
         description = "CCSDS Space Packet Protocol in Rust."
       }
-      "itest" = {
-        description = "Integration testing library for Arrow services."
-      }
     }
   }
 
@@ -214,6 +211,10 @@ locals {
       }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
+        webhooks    = {}
+      }
+      "itest" = {
+        description = "Repository for integration testing of the Arrow backend services."
         webhooks    = {}
       }
     }
