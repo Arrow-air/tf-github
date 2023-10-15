@@ -124,7 +124,7 @@ locals {
       "compliance" = {
         description = "Communication with external regulatory bodies."
         # Override files list to provision with Terraform
-        # svc-compliance handles its own post_release file
+        # svc-compliance handles its own post_release and docker-compose.yml
         # due to region specific docker builds
         files = merge(
           local.rust_default.files, {
@@ -133,9 +133,6 @@ locals {
             }
             ".dockerignore" = {
               content = file("templates/rust-svc/.dockerignore")
-            }
-            "docker-compose.yml" = {
-              content = file("templates/rust-svc/docker-compose.yml")
             }
             ".github/workflows/autosquash.yml" = {
               content = file("templates/rust-all/.github/workflows/autosquash.yml")
