@@ -271,6 +271,12 @@ locals {
       ".github/workflows/autosquash.yml" = {
         content = file("templates/rust-all/.github/workflows/autosquash.yml")
       }
+      ".github/workflows/release_checklist.yml" = {
+        content = file("templates/rust-all/.github/workflows/release_checklist.yml")
+      }
+      "scripts/release_checklist.py" = {
+        content = file("templates/rust-all/release_checklist.py")
+      }
     })
 
     settings = {
