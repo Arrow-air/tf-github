@@ -283,12 +283,14 @@ locals {
       default_branch = "develop"
       webhooks       = try(local.webhooks["services"], {})
       default_branch_protection_settings = {
+        force_push_bypassers = ["/arrow-github-bot"]
         required_pull_request_reviews = {
           pull_request_bypassers = ["/arrow-github-bot"]
         }
       }
       protected_branches = {
         "main" = {
+          force_push_bypassers = ["/arrow-github-bot"]
           required_pull_request_reviews = {
             pull_request_bypassers = ["/arrow-github-bot"]
           }

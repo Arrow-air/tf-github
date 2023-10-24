@@ -143,7 +143,8 @@ resource "github_branch_protection" "protection" {
   require_conversation_resolution = each.value.require_conversation_resolution
   require_signed_commits          = each.value.require_signed_commits
 
-  push_restrictions = each.value.push_restrictions
+  push_restrictions    = each.value.push_restrictions
+  force_push_bypassers = each.value.force_push_bypassers
 
   required_status_checks {
     strict = each.value.required_status_checks.strict
@@ -196,6 +197,23 @@ resource "github_repository_file" "init" {
 
   commit_message = "ci: terraform provisioned file changes\n\n[skip ci]"
 }
+
+########################################################
+#
+# Get files content when repository is archived
+# so we can make sure Terraform won't try and override
+# the file content while it's read only resulting in
+# apply errors.
+#
+########################################################
+data "github_repository_file" "files" {
+  for_each = var.repository_files
+
+  repository = github_repository.repository.name
+  branch     = github_branch_default.default.branch
+
+  file = each.key
+}
 ########################################################
 #
 # Provision Terraform managed repository files
@@ -208,7 +226,7 @@ resource "github_repository_file" "files" {
   branch     = github_branch_default.default.branch
 
   file                = each.key
-  content             = each.value.content
+  content             = var.archived ? data.github_repository_file.files[each.key].content : each.value.content
   overwrite_on_create = each.value.overwrite_on_create
 
   commit_message = "fixup! ci: terraform provisioned file changes\n\n[skip ci]"
