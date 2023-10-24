@@ -25,7 +25,7 @@ jobs:
           message: |
             :clipboard: Release Checklist :white_check_mark:
 
-            (Run locally with `scripts/release_checklist.py -t -c`)
+            :house_with_garden: Check locally with `make release-checklist`
 
             <details>
 
@@ -33,6 +33,5 @@ jobs:
 
             </details>
 
-            :warning: *Comments and test sections not checked by default.*
-
+            :warning: *Comments and test sections not checked by default. Check locally with `make release-checklist-full`*
           comment_includes: ':clipboard: Release Checklist :white_check_mark:'
