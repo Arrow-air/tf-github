@@ -101,7 +101,8 @@ variable "protected_branches" {
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, true)
 
-    push_restrictions = optional(list(string), [])
+    push_restrictions    = optional(list(string), [])
+    force_push_bypassers = optional(list(string), [])
 
     required_status_checks = optional(
       object({
@@ -174,6 +175,7 @@ variable "default_branch_protection_settings" {
     require_conversation_resolution = optional(bool, true)
     require_signed_commits          = optional(bool, true)
     push_restrictions               = optional(list(string), [])
+    force_push_bypassers            = optional(list(string), [])
 
     required_status_checks = optional(
       object({
@@ -209,6 +211,7 @@ variable "default_branch_protection_settings" {
     require_conversation_resolution = true
     require_signed_commits          = true
     push_restrictions               = []
+    force_push_bypassers            = []
     required_status_checks          = { strict = true }
 
     required_pull_request_reviews = {
