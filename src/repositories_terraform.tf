@@ -73,6 +73,11 @@ locals {
             content = file("templates/tf-github/.github/workflows/terraform.yml")
           }
         }
+        default_branch_protection_settings = {
+          required_pull_request_reviews = {
+            required_approving_review_count = 1
+          }
+        }
       }
     }
   }

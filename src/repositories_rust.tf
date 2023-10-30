@@ -18,10 +18,6 @@ locals {
     )
 
     repos = {
-      "router" = {
-        archived    = "true",
-        description = "Fleet Routing Algorithm Library"
-      }
       "common" = {
         description = "Common functions and data types for Arrow services."
         variables = {
@@ -326,7 +322,6 @@ module "repository_rust_lib" {
   )
 
   variables = merge(local.rust_svc.variables, try(each.value.variables, {}))
-  archived  = try(each.value.archived, false)
 
   # Settings with defaults
   owner_team            = each.value.owner_team
@@ -366,7 +361,6 @@ module "repository_rust_svc" {
 
   environments = local.rust_svc.environments
   variables    = merge(local.rust_svc.variables, try(each.value.variables, {}))
-  archived     = try(each.value.archived, false)
 
   # Settings with defaults
   owner_team            = each.value.owner_team

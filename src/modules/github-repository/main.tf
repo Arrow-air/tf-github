@@ -36,7 +36,6 @@ resource "github_repository" "repository" {
   has_wiki             = true
   vulnerability_alerts = true
   archive_on_destroy   = true
-  archived             = var.archived
 
   dynamic "template" {
     for_each = var.template == null ? [] : [var.template]
@@ -200,22 +199,6 @@ resource "github_repository_file" "init" {
 
 ########################################################
 #
-# Get files content when repository is archived
-# so we can make sure Terraform won't try and override
-# the file content while it's read only resulting in
-# apply errors.
-#
-########################################################
-data "github_repository_file" "files" {
-  for_each = var.repository_files
-
-  repository = github_repository.repository.name
-  branch     = github_branch_default.default.branch
-
-  file = each.key
-}
-########################################################
-#
 # Provision Terraform managed repository files
 #
 ########################################################
@@ -226,7 +209,7 @@ resource "github_repository_file" "files" {
   branch     = github_branch_default.default.branch
 
   file                = each.key
-  content             = var.archived ? data.github_repository_file.files[each.key].content : each.value.content
+  content             = each.value.content
   overwrite_on_create = each.value.overwrite_on_create
 
   commit_message = "fixup! ci: terraform provisioned file changes\n\n[skip ci]"

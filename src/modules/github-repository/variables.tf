@@ -25,12 +25,6 @@ variable "visibility" {
   default     = "public"
 }
 
-variable "archived" {
-  description = "Specifies if the repository should be archived. Defaults to false. NOTE Currently, the API does not support unarchiving."
-  type        = bool
-  default     = false
-}
-
 variable "is_template" {
   description = "Set to true to tell GitHub that this is a template repository."
   type        = bool
