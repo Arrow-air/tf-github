@@ -55,8 +55,8 @@ locals {
         ".dockerignore" = {
           content = file("templates/rust-svc/.dockerignore")
         }
-        "docker-compose.yml" = {
-          content = file("templates/rust-svc/docker-compose.yml")
+        "docker-compose-base.yml" = {
+          content = file("templates/rust-svc/docker-compose-base.yml")
         }
         ".github/workflows/post_release.yml" = {
           content = file("templates/rust-svc/.github/workflows/post_release.yml")
@@ -70,31 +70,6 @@ locals {
     repos = {
       "storage" = {
         description = "Storage module"
-        # Override files list to provision with Terraform
-        # svc-storage handles its own docker-compose.yml file
-        # due to extra backend services needed
-        files = merge(
-          local.rust_default.files, {
-            "Dockerfile" = {
-              content = file("templates/rust-svc/Dockerfile")
-            }
-            ".dockerignore" = {
-              content = file("templates/rust-svc/.dockerignore")
-            }
-            ".github/workflows/autosquash.yml" = {
-              content = file("templates/rust-all/.github/workflows/autosquash.yml")
-            }
-            ".github/workflows/release.yml" = {
-              content = file("templates/rust-all/.github/workflows/release.yml")
-            }
-            ".github/workflows/post_release.yml" = {
-              content = file("templates/rust-svc/.github/workflows/post_release.yml")
-            }
-            ".github/workflows/api_docs.yml" = {
-              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
-            }
-          }
-        )
       }
       "scheduler" = {
         description = "Fleet Routing and Flight Planner"
@@ -117,7 +92,7 @@ locals {
       "compliance" = {
         description = "Communication with external regulatory bodies."
         # Override files list to provision with Terraform
-        # svc-compliance handles its own post_release and docker-compose.yml
+        # svc-compliance handles its own post_release file
         # due to region specific docker builds
         files = merge(
           local.rust_default.files, {
@@ -127,6 +102,9 @@ locals {
             ".dockerignore" = {
               content = file("templates/rust-svc/.dockerignore")
             }
+            "docker-compose-base.yml" = {
+              content = file("templates/rust-svc/docker-compose-base.yml")
+            }
             ".github/workflows/autosquash.yml" = {
               content = file("templates/rust-all/.github/workflows/autosquash.yml")
             }
@@ -138,7 +116,6 @@ locals {
             }
           }
         )
-
       }
       "assets" = {
         description = "Registration and management of network assets."
@@ -148,59 +125,9 @@ locals {
       }
       "telemetry" = {
         description = "Receive and rebroadcast vehicle and vertiport telemetry."
-        # Override files list to provision with Terraform
-        # svc-telemetry handles its own docker-compose.yml file
-        # due to extra backend services needed
-        files = merge(
-          local.rust_default.files, {
-            "Dockerfile" = {
-              content = file("templates/rust-svc/Dockerfile")
-            }
-            ".dockerignore" = {
-              content = file("templates/rust-svc/.dockerignore")
-            }
-            ".github/workflows/autosquash.yml" = {
-              content = file("templates/rust-all/.github/workflows/autosquash.yml")
-            }
-            ".github/workflows/release.yml" = {
-              content = file("templates/rust-all/.github/workflows/release.yml")
-            }
-            ".github/workflows/post_release.yml" = {
-              content = file("templates/rust-svc/.github/workflows/post_release.yml")
-            },
-            ".github/workflows/api_docs.yml" = {
-              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
-            }
-          }
-        )
       }
       "gis" = {
         description = "Gateway to the Airspace Geoinformation Database"
-        # Override files list to provision with Terraform
-        # svc-gis handles its own docker-compose.yml file
-        # due to extra backend services needed (PostGIS)
-        files = merge(
-          local.rust_default.files, {
-            "Dockerfile" = {
-              content = file("templates/rust-svc/Dockerfile")
-            }
-            ".dockerignore" = {
-              content = file("templates/rust-svc/.dockerignore")
-            }
-            ".github/workflows/autosquash.yml" = {
-              content = file("templates/rust-all/.github/workflows/autosquash.yml")
-            }
-            ".github/workflows/release.yml" = {
-              content = file("templates/rust-all/.github/workflows/release.yml")
-            }
-            ".github/workflows/post_release.yml" = {
-              content = file("templates/rust-svc/.github/workflows/post_release.yml")
-            }
-            ".github/workflows/api_docs.yml" = {
-              content = file("templates/rust-svc/.github/workflows/api_docs.yml")
-            }
-          }
-        )
       }
       "devops-test" = {
         description = "Repository used by devops to test workflows before rolling out to all other svc repositories"
