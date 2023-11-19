@@ -41,3 +41,5 @@ E134L2OOWNMG4H
 EVMCVI5OJORTD
 geoinformation
 unarchiving
+Lcov
+seccomp
