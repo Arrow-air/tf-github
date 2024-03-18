@@ -29,6 +29,9 @@ locals {
         ".github/workflows/deploy-dmo.yml" = {
           content = file("templates/nuxt-web/.github/workflows/deploy-dmo.yml")
         }
+        ".github/workflows/deploy-dev.yml" = {
+          content = file("templates/nuxt-web/.github/workflows/deploy-dev.yml")
+        }
         ".github/workflows/deploy-prd.yml" = {
           content = file("templates/nuxt-web/.github/workflows/deploy-prd.yml")
         }
@@ -53,20 +56,19 @@ locals {
           production = {
             branch = "main"
             variables = {
-              "ENVIRONMENT_ABBR"            = "prd"
-              "AWS_CLOUDFRONT_DISTRIBUTION" = "E134L2OOWNMG4H"
+              "ENVIRONMENT_ABBR" = "prd"
             }
           }
           staging = {
             branch = "staging"
             variables = {
-              "ENVIRONMENT_ABBR"            = "stg"
-              "AWS_CLOUDFRONT_DISTRIBUTION" = "EVMCVI5OJORTD"
+              "ENVIRONMENT_ABBR" = "stg"
             }
           }
           demo = {
             variables = {
-              "ENVIRONMENT_ABBR" = "dmo"
+              "ENVIRONMENT_ABBR"            = "dmo"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "EC6DBI73KDZ9O"
             }
           }
           dev = {
@@ -78,6 +80,36 @@ locals {
       }
       "services-hangar" = {
         description = "Asset management and administration UI"
+        variables = {
+          "AWS_REGION" = "us-east-1"
+          "DOMAIN"     = "flyarrow.io"
+          "APP"        = "hangar"
+        }
+        environments = {
+          production = {
+            branch = "main"
+            variables = {
+              "ENVIRONMENT_ABBR" = "prd"
+            }
+          }
+          staging = {
+            branch = "staging"
+            variables = {
+              "ENVIRONMENT_ABBR" = "stg"
+            }
+          }
+          demo = {
+            variables = {
+              "ENVIRONMENT_ABBR"            = "dmo"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "E10MH4HC12EKI6"
+            }
+          }
+          dev = {
+            variables = {
+              "ENVIRONMENT_ABBR" = "dev"
+            }
+          }
+        }
       }
       "services-public" = {
         description = "Services landing page"
@@ -91,13 +123,14 @@ locals {
             branch = "main"
             variables = {
               "ENVIRONMENT_ABBR"            = "prd"
-              "AWS_CLOUDFRONT_DISTRIBUTION" = "E134L2OOWNMG4H"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "E1L4UUMXJM67HU"
             }
           }
           staging = {
             branch = "staging"
             variables = {
-              "ENVIRONMENT_ABBR" = "stg"
+              "ENVIRONMENT_ABBR"            = "stg"
+              "AWS_CLOUDFRONT_DISTRIBUTION" = "EVMCVI5OJORTD"
             }
           }
           demo = {
