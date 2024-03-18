@@ -7,7 +7,6 @@ locals {
   # Repositories needed for shared Nuxt Components can be listed here
   nuxt_mod = {
     template_files = merge(local.nuxt_default.template_files, {
-      "Makefile" = "templates/nuxt-all/Makefile"
     })
 
     files = local.nuxt_default.files
@@ -19,7 +18,6 @@ locals {
   # Repositories needed for our Web Applications can be listed here
   nuxt_web = {
     template_files = merge(local.nuxt_default.template_files, {
-      "Makefile" = "templates/nuxt-all/Makefile"
     })
     files = merge(
       local.nuxt_default.files, {
@@ -153,6 +151,8 @@ locals {
 
   nuxt_default = {
     template_files = merge(local.template_files, {
+      "Makefile" = "templates/nuxt-all/Makefile"
+      "LICENSE"  = "templates/nuxt-all/LICENSE.tftpl"
     })
 
     files = merge(local.files, {
