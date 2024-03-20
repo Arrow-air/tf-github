@@ -11,7 +11,18 @@ jobs:
   build-and-deploy:
     uses: ./.github/workflows/build-and-deploy.yml
     with:
-      node-version: 19.x
+      node-version: 21.x
+      environment: demo
+    secrets: inherit
+    permissions:
+      id-token: write
+      contents: read
+
+  invalidate-cloudfront:
+    uses: ./.github/workflows/invalidate-cloudfront.yml
+    needs: [build-and-deploy]
+    with:
+      paths: "/*"
       environment: demo
     secrets: inherit
     permissions:

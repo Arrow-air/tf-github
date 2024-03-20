@@ -35,6 +35,8 @@ jobs:
           node-version: ${{ inputs.node-version }}
           cache: yarn
       - name: Install dependencies
+        env:
+          GOOGLE_CLIENTID: ${{ secrets.GOOGLE_CLIENTID }}
         run: yarn install --frozen-lockfile
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -43,6 +45,8 @@ jobs:
           role-session-name: "github-actions-${{ github.event.repository.name }}-deploy"
           aws-region: "${{ vars.AWS_REGION }}"
       - name: Build
+        env:
+          GOOGLE_CLIENTID: ${{ secrets.GOOGLE_CLIENTID }}
         run: yarn generate
       - name: Deploy to ${{ inputs.environment }} S3
         id: sync_s3
