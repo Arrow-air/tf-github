@@ -37,19 +37,6 @@ locals {
         description = "GCP Organization management"
         project     = "org"
       }
-      "projects" = {
-        description = "GCP Project management"
-        project     = "org"
-      }
-      "network" = {
-        description = "GCP Network management"
-        project     = "network"
-      }
-      "services-app" = {
-        description = "GCP Services App infra management"
-        project     = "app"
-        owner_team  = "services"
-      }
     }
   }
 
