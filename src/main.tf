@@ -108,6 +108,18 @@ locals {
         maintainers = ["services", "drone-engineering"]
       }
     }
+    "gbc" = {
+      default_branch = "main"
+      description    = "Arrowair Grants and Bounties Committee"
+      visibility     = "public"
+      owner_team     = "services"
+    }
+    "governance" = {
+      default_branch = "main"
+      description    = "Arrowair DAO governance"
+      visibility     = "public"
+      owner_team     = "services"
+    }
   }
 }
 
