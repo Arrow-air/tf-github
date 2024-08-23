@@ -120,6 +120,12 @@ locals {
       visibility     = "public"
       owner_team     = "governance"
     }
+    "dao-aip" = {
+      default_branch = "main"
+      description    = "Arrowair DAO Arrow Improvement Proposals"
+      visibility     = "public"
+      owner_team     = "governance"
+    }
   }
 }
 
