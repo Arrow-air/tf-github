@@ -30,10 +30,10 @@ locals {
     })
 
     repos = {
-      # "feather" = {
-      #   description = "Project Feather documentation, designs, and project artifacts."
-      #   webhooks    = {}
-      # }
+      "feather" = {
+        description = "Project Feather documentation, designs, and project artifacts."
+        webhooks    = {}
+      }
     }
 
     settings = {
@@ -53,31 +53,31 @@ locals {
 ########################################################
 # Arrow Air Pod Projects
 ########################################################
-# module "repository_pod" {
-#   source   = "./modules/github-repository/"
-#   for_each = { for key, settings in local.pod-projects.repos : key => settings } # config
+module "repository_pod" {
+  source   = "./modules/github-repository/"
+  for_each = { for key, settings in local.pod-projects.repos : key => merge(local.pod-projects.settings, settings) } # config
 
-#   name        = format("project-%s", each.key)
-#   description = format("%s", each.value.description)
-#   template    = module.repository_pod_template["project"].repository.name # config
-#   repository_files = merge(
-#     local.pod-projects.files,                               # config
-#     { for file, path in local.pod-projects.template_files : # config
-#       file => {
-#         content = templatefile(path, {
-#           owner_team = each.value.owner_team
-#           name       = each.key
-#         })
-#       }
-#     }
-#   )
+  name        = format("project-%s", each.key)
+  description = format("%s", each.value.description)
+  template    = module.repository_pod_template["project"].repository.name # config
+  repository_files = merge(
+    local.pod-projects.files,                               # config
+    { for file, path in local.pod-projects.template_files : # config
+      file => {
+        content = templatefile(path, {
+          owner_team = each.value.owner_team
+          name       = each.key
+        })
+      }
+    }
+  )
 
-#   # Settings with defaults
-#   owner_team            = each.value.owner_team
-#   visibility            = each.value.visibility
-#   default_branch        = each.value.default_branch
-#   webhooks              = each.value.webhooks
-#   terraform_app_node_id = local.arrow_release_automation_node_id
+  # Settings with defaults
+  owner_team            = each.value.owner_team
+  visibility            = each.value.visibility
+  default_branch        = each.value.default_branch
+  webhooks              = each.value.webhooks
+  terraform_app_node_id = local.arrow_release_automation_node_id
 
-#   default_branch_protection_settings = each.value.default_branch_protection_settings
-# }
+  default_branch_protection_settings = each.value.default_branch_protection_settings
+}
