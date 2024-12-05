@@ -34,6 +34,10 @@ locals {
         description = "Project Feather documentation, designs, and project artifacts."
         webhooks    = {}
       }
+      "quiver" = {
+        description = "Project Quiver documentation, designs, and project artifacts."
+        webhooks    = {}
+      }
     }
 
     settings = {
