@@ -38,6 +38,10 @@ locals {
         description = "Project Quiver documentation, designs, and project artifacts."
         webhooks    = {}
       }
+      "flight-tracking" = {
+        description = "Code and documentation for the flight tracking platform."
+        webhooks    = {}
+      }
     }
 
     settings = {
