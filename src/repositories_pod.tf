@@ -42,6 +42,11 @@ locals {
         description = "Code and documentation for the flight tracking platform."
         webhooks    = {}
       }
+      "spearhead" = {
+        description = "Project Spearhead documentation, designs, and project artifacts."
+        owner_team  = "spearhead"
+        webhooks    = {}
+      }
     }
 
     settings = {
