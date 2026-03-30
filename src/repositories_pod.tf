@@ -47,6 +47,11 @@ locals {
         owner_team  = "spearhead"
         webhooks    = {}
       }
+      "caribou" = {
+        description = "Project Caribou documentation, designs, and project artifacts."
+        owner_team  = "caribou"
+        webhooks    = {}
+      }
     }
 
     settings = {
