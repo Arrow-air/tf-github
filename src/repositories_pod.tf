@@ -52,6 +52,11 @@ locals {
         owner_team  = "caribou"
         webhooks    = {}
       }
+      "longshot" = {
+        description = "Project Longshot documentation, designs, and project artifacts."
+        owner_team  = "longshot"
+        webhooks    = {}
+      }
     }
 
     settings = {
