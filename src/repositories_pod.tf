@@ -21,12 +21,6 @@ locals {
       "docs/mkdocs.yaml" = {
         content = file("templates/pod-project/mkdocs.yaml")
       }
-      "docs/ADRs/template-adr.md" = {
-        content = file("templates/pod-project/template-adr.md")
-      }
-      "docs/meetings/template-meeting.md" = {
-        content = file("templates/pod-project/template-meeting.md")
-      }
     })
 
     repos = {
