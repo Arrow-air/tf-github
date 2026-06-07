@@ -126,6 +126,15 @@ locals {
       visibility     = "public"
       owner_team     = "governance"
     }
+    "arrow-catalog" = {
+      default_branch = "main"
+      description    = "Canonical catalog data for Arrow products, manufacturers, and AIP-009 manufacturing protocol metadata"
+      visibility     = "public"
+      owner_team     = "governance"
+      collaborators = {
+        maintainers = ["drone-engineering", "webdevelopers"]
+      }
+    }
   }
 }
 
