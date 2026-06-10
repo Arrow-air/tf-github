@@ -135,6 +135,15 @@ locals {
         maintainers = ["drone-engineering", "webdevelopers"]
       }
     }
+    "arrow-store" = {
+      default_branch = "main"
+      description    = "Independent storefront app for Arrow products, manufacturers, and AIP-009 commerce workflows"
+      visibility     = "public"
+      owner_team     = "webdevelopers"
+      collaborators = {
+        maintainers = ["drone-engineering", "governance"]
+      }
+    }
   }
 }
 
