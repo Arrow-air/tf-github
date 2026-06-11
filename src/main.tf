@@ -34,9 +34,6 @@ locals {
     ".commitlintrc.yml" = {
       content = file("templates/all/.commitlintrc.yml")
     },
-    ".cspell.config.yaml" = {
-      content = file("templates/all/.cspell.config.yaml")
-    },
     ".make/base.mk" = {
       content = file("templates/all/.make/base.mk")
     },
