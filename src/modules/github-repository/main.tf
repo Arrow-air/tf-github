@@ -161,7 +161,8 @@ resource "github_branch_protection" "protection" {
   depends_on = [
     github_branch.branch,
     github_repository_environment.env,
-    github_repository_file.files
+    github_repository_file.files,
+    github_repository_file.seeded_files
   ]
 }
 
@@ -177,7 +178,8 @@ resource "github_branch_protection" "all" {
   depends_on = [
     github_branch.branch,
     github_repository_environment.env,
-    github_repository_file.files
+    github_repository_file.files,
+    github_repository_file.seeded_files
   ]
 }
 
@@ -214,6 +216,37 @@ resource "github_repository_file" "files" {
 
   commit_message = "fixup! ci: terraform provisioned file changes\n\n[skip ci]"
   depends_on     = [github_repository_file.init]
+}
+
+########################################################
+#
+# Provision seeded repository files
+# These files are created with initial content, but
+# owned by the repository afterwards. Terraform will
+# not update them after creation.
+#
+########################################################
+resource "github_repository_file" "seeded_files" {
+  for_each = var.seeded_repository_files
+
+  repository = github_repository.repository.name
+  branch     = github_branch_default.default.branch
+
+  file                = each.key
+  content             = each.value.content
+  overwrite_on_create = each.value.overwrite_on_create
+
+  commit_message = "fixup! ci: terraform provisioned file changes\n\n[skip ci]"
+  depends_on     = [github_repository_file.init]
+
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+moved {
+  from = github_repository_file.files[".cspell.config.yaml"]
+  to   = github_repository_file.seeded_files[".cspell.config.yaml"]
 }
 
 ########################################################

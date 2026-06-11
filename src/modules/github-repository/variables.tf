@@ -248,3 +248,12 @@ variable "repository_files" {
   }))
   default = {}
 }
+
+variable "seeded_repository_files" {
+  description = "List of files that should be provisioned with initial content when the repository is created, but never updated afterwards. The repository owns these files after creation."
+  type = map(object({
+    content             = string
+    overwrite_on_create = optional(bool, true)
+  }))
+  default = {}
+}

@@ -86,6 +86,7 @@ module "repository_stm32" {
       }
     }
   )
+  seeded_repository_files = local.seeded_files
 
   # Settings with defaults
   owner_team            = each.value.owner_team
