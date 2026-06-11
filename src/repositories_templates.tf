@@ -76,6 +76,8 @@ module "repository_emb_template" {
     ) } }
   )
 
+  seeded_repository_files = local.seeded_files
+
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }
 
@@ -107,6 +109,8 @@ module "repository_pod_template" {
         }
     ) } }
   )
+
+  seeded_repository_files = local.seeded_files
 
   default_branch_protection_settings = each.value.default_branch_protection_settings
 }

@@ -53,6 +53,15 @@ locals {
       content = file("templates/all/CONTRIBUTING.md")
     },
   }
+
+  # Files seeded with initial content on repository creation.
+  # The repository owns these files afterwards, Terraform will not update them.
+  seeded_files = {
+    ".cspell.config.yaml" = {
+      content = file("templates/all/.cspell.config.yaml")
+    },
+  }
+
   template_files = {
     ".github/CODEOWNERS" = "templates/all/.github/CODEOWNERS.tftpl"
     "Makefile"           = "templates/all/Makefile"
@@ -167,6 +176,8 @@ module "repository" {
     },
     try(each.value.repository_files, {})
   )
+
+  seeded_repository_files = local.seeded_files
 
   collaborators = try(each.value.collaborators, {})
 

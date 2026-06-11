@@ -126,6 +126,8 @@ module "repository_tf" {
     }
   )
 
+  seeded_repository_files = local.seeded_files
+
   collaborators = {
     maintainers = ["services"]
   }
@@ -163,6 +165,8 @@ module "repository_tf_gcp" {
     }
   )
 
+  seeded_repository_files = local.seeded_files
+
   collaborators = {
     maintainers = ["services"]
   }
@@ -198,6 +202,8 @@ module "repository_tf_mod" {
       }) }
     }
   )
+
+  seeded_repository_files = local.seeded_files
 
   collaborators = {
     maintainers = ["services"]
