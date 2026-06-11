@@ -55,7 +55,7 @@ locals {
       owner_team     = "embedded"
       visibility     = "public"
       default_branch = "develop"
-      webhooks       = try(local.webhooks["embedded"], {})
+      webhooks       = {}
       default_branch_protection_settings = {
         required_pull_request_reviews = {
           pull_request_bypassers = ["/arrow-github-bot"]

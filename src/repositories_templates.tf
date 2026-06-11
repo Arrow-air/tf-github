@@ -14,7 +14,7 @@ locals {
         owner_team                         = "embedded"
         visibility                         = "public"
         default_branch                     = "develop"
-        webhooks                           = try(local.webhooks["embedded"], {})
+        webhooks                           = {}
         default_branch_protection_settings = {} # Using module defaults
       }
     }
