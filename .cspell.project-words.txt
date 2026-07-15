@@ -16,12 +16,14 @@ setsubtract
 sitory
 SMUL
 smul
+Supabase
 taplo
 tcort
 templatefile
 tftpl
 tolist
 toset
+touchpoints
 tput
 webdevelopers
 yapf
