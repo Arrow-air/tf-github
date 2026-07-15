@@ -150,6 +150,15 @@ locals {
         maintainers = ["drone-engineering", "governance"]
       }
     }
+    "arrow-crm" = {
+      default_branch = "main"
+      description    = "Member CRM for Arrow DAO onboarding — tracks new members, touchpoints, and introductions. Code public; member data lives in Supabase, never in git."
+      visibility     = "public"
+      owner_team     = "webdevelopers"
+      collaborators = {
+        maintainers = ["growth-and-ops"]
+      }
+    }
   }
 }
 
