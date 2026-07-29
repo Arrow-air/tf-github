@@ -1,7 +1,9 @@
 ---
-## DO NOT EDIT!
-# This file was provisioned by Terraform
-# File origin: https://github.com/Arrow-air/tf-github/tree/main/src/templates/all/.cspell.config.yaml
+## SEEDED FILE - this repository owns it.
+# Terraform wrote this file once, when the repository was created, and will not
+# update it again. Local changes are preserved. Edit it freely.
+# Upstream default: https://github.com/Arrow-air/tf-github/tree/main/src/templates/all/.cspell.config.yaml
+# Changing the upstream default affects newly created repositories only.
 
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
 version: "0.2"

@@ -24,6 +24,10 @@ locals {
     }
   }
 
+  # Managed files. Terraform overwrites these on every run, so repositories
+  # cannot diverge from the template - changes must be made upstream here.
+  # Contrast with seeded_files below; the only thing separating the two
+  # categories is which local a file is placed in.
   files = {
     ".github/workflows/sanity_checks.yml" = {
       content = file("templates/all/.github/workflows/sanity_checks.yml")
